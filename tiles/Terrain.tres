@@ -1,11 +1,14 @@
 [gd_resource type="TileSet" format=3 uid="uid://57wix0efen5o"]
 
-[ext_resource type="Texture2D" path="res://assets/tiles/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png" id="1_g7jkm"]
-[ext_resource type="Texture2D" path="res://assets/tiles/cave-tileset/Brown_Tile_Terrain (16 x 16).png" id="2_r0ryr"]
-[ext_resource type="Texture2D" path="res://assets/tiles/cave-tileset/Gray_Tile_Terrain (16 x 16).png" id="3_324lj"]
+[ext_resource type="Texture2D" uid="uid://ovyeu10kp545" path="res://sprites/Seasonal Tilesets/6 - Cave/Brown_Tile_Terrain (16 x 16).png" id="1_udkip"]
+[ext_resource type="Texture2D" uid="uid://cbopnrui60hyw" path="res://sprites/Seasonal Tilesets/6 - Cave/Gray_Tile_Terrain (16 x 16).png" id="2_8t5ty"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_selcm"]
+load_path = "res://.godot/imported/Terrain (16 x 16).png-0b19f9c7f7e78df7ded206dcad8d839c.ctex"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orrsl"]
-texture = ExtResource("1_g7jkm")
+resource_name = "terrain-tropc"
+texture = SubResource("CompressedTexture2D_selcm")
 3:1/0 = 0
 3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -0.8992939, 8, -0.71943474, -8, -0.71943474)
 3:1/0/physics_layer_0/polygon_0/one_way = true
@@ -84,7 +87,7 @@ texture = ExtResource("1_g7jkm")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lbvpa"]
 resource_name = "terrain-cave-brown"
-texture = ExtResource("2_r0ryr")
+texture = ExtResource("1_udkip")
 1:1/0 = 0
 2:1/0 = 0
 4:1/0 = 0
@@ -345,7 +348,7 @@ texture = ExtResource("2_r0ryr")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_v2lal"]
 resource_name = "terrain-cave-gray"
-texture = ExtResource("3_324lj")
+texture = ExtResource("2_8t5ty")
 1:1/0 = 0
 2:1/0 = 0
 4:1/0 = 0

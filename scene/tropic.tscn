@@ -1,0 +1,20 @@
+[gd_scene format=4 uid="uid://ceffagfux1xeg"]
+
+[ext_resource type="TileSet" uid="uid://57wix0efen5o" path="res://tiles/terrain.tres" id="1_8yo2w"]
+[ext_resource type="PackedScene" uid="uid://x8mesfj338s7" path="res://entities/player.tscn" id="2_bmxgx"]
+[ext_resource type="PackedScene" uid="uid://dhbdblsutk2le" path="res://entities/camera.tscn" id="3_ry6l7"]
+
+[node name="Tropic" type="Node2D" unique_id=593944009]
+
+[node name="Tile" type="Node" parent="." unique_id=286968174]
+
+[node name="Terrain" type="TileMapLayer" parent="Tile" unique_id=693492704]
+tile_map_data = PackedByteArray("AAAAAAwAAAABAAMAAAABAAwAAAACAAMAAAAQAAwAAAACAAMAAAARAAwAAAAHAAMAAAACAAwAAAACAAMAAAADAAwAAAACAAMAAAAEAAwAAAACAAMAAAAFAAwAAAACAAMAAAAGAAwAAAACAAMAAAAHAAwAAAACAAMAAAAIAAwAAAACAAMAAAAJAAwAAAACAAMAAAAKAAwAAAACAAMAAAALAAwAAAACAAMAAAAMAAwAAAACAAMAAAANAAwAAAACAAMAAAAOAAwAAAACAAMAAAAPAAwAAAACAAMAAAAKAAgAAAAJAAMAAAALAAgAAAAKAAMAAAAMAAgAAAAMAAMAAAANAAgAAAANAAMAAAAFAAQAAAAJAAMAAAAGAAQAAAAKAAMAAAAHAAQAAAAMAAMAAAAIAAQAAAANAAMAAAAMAAEAAAAJAAMAAAANAAEAAAAKAAMAAAAOAAEAAAAMAAMAAAAPAAEAAAANAAMAAAARAP3/AAAJAAMAAAASAP3/AAAKAAMAAAATAP3/AAAMAAMAAAAUAP3/AAANAAMAAAAOAPr/AAAMAAMAAAAPAPr/AAANAAMAAAAMAPr/AAAJAAMAAAANAPr/AAAKAAMAAAAHAPj/AAAKAAMAAAAIAPj/AAAMAAMAAAAFAPj/AAAJAAMAAAAGAPj/AAAKAAMAAAA=")
+tile_set = ExtResource("1_8yo2w")
+
+[node name="Player" parent="." unique_id=1649635526 instance=ExtResource("2_bmxgx")]
+position = Vector2(27, 169)
+
+[node name="Camera" parent="." unique_id=1171748134 instance=ExtResource("3_ry6l7")]
+offset = Vector2(1, 1)
+position_smoothing_enabled = true
