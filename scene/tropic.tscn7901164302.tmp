@@ -109,6 +109,7 @@ tile_set = SubResource("TileSet_kjkl5")
 
 [node name="Player" parent="." unique_id=1649635526 instance=ExtResource("2_bmxgx")]
 position = Vector2(30, 154)
+max_jump_count = 2
 
 [node name="Camera" parent="." unique_id=1171748134 instance=ExtResource("3_ry6l7")]
 offset = Vector2(1, 1)
