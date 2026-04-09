@@ -159,10 +159,15 @@ sprite_frames = SubResource("SpriteFrames_ef06p")
 animation = &"hurt"
 
 [node name="HitBox" type="Area2D" parent="." unique_id=258012614]
+collision_layer = 3
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=44482278]
 position = Vector2(0.8333335, -3.973643e-07)
 shape = SubResource("RectangleShape2D_qsoyl")
 debug_color = Color(0.9686616, 0.061992593, 0.4261249, 0.41960785)
 
+[node name="ReloadTimer" type="Timer" parent="." unique_id=2110003079]
+
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
