@@ -12,6 +12,7 @@ enum PlayerState {
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var reload_timer: Timer = $ReloadTimer
+@onready var hit_box_collision_shape: CollisionShape2D = $HitBox/CollisionShape2D
 
 @export var max_speed = 100.0
 @export var acceleration = 400
@@ -80,17 +81,17 @@ func exit_from_duck_state():
 func go_to_hurt_state():
 	status = PlayerState.hurt
 	anim.play("hurt")
-	velocity = Vector2.ZERO
+	velocity.x = 0
 	reload_timer.start()
 
 func idle_state(delta):
 	move(delta)
-	if velocity.x != 0:
-		go_to_walk_state()
-		return
-	
 	if Input.is_action_just_pressed("jump"):
 		go_to_jump_state()
+		return
+	
+	if velocity.x != 0:
+		go_to_walk_state()
 		return
 	
 	if Input.is_action_pressed("duck"):
@@ -168,14 +169,23 @@ func can_jump() -> bool:
 	return jump_count < max_jump_count
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group("enemies"):
+		hirt_enemy(area)
+	elif area.is_in_group("lethalArea") && not anim.animation == "duck":
+		hit_lethal_area()
+
+func hirt_enemy(area: Area2D):
 	if velocity.y > 0:
 		# inimigo morre
 		area.get_parent().take_damage()
 		go_to_jump_state()
 	else:
+		# player morre
 		if status != PlayerState.hurt:
-			# player morre
 			go_to_hurt_state()
+
+func hit_lethal_area():
+	go_to_hurt_state()
 
 func _on_reload_timer_timeout() -> void:
 	get_tree().reload_current_scene()
