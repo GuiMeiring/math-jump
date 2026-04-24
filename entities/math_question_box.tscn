@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dgs7lvxdq3iby"]
+
+[ext_resource type="Script" uid="uid://dam55jbswhg6k" path="res://scripts/math_question_box.gd" id="1_ewyxa"]
+[ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="1_o5vpw"]
+[ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="2_ewyxa"]
+
+[node name="math_question_box" type="MarginContainer" unique_id=397823055]
+offset_right = 18.0
+offset_bottom = 16.0
+script = ExtResource("1_ewyxa")
+
+[node name="background" type="NinePatchRect" parent="." unique_id=1419640741]
+layout_mode = 2
+texture = ExtResource("1_o5vpw")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="label_margin" type="MarginContainer" parent="." unique_id=283326293]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="text_label" type="Label" parent="label_margin" unique_id=1050870334]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_ewyxa")
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="letter_time_display" type="Timer" parent="." unique_id=1029686281]
+one_shot = true
+
+[connection signal="timeout" from="letter_time_display" to="." method="_on_letter_time_display_timeout"]

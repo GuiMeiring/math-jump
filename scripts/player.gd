@@ -13,6 +13,7 @@ enum PlayerState {
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var reload_timer: Timer = $ReloadTimer
 @onready var hit_box_collision_shape: CollisionShape2D = $HitBox/CollisionShape2D
+@onready var attack_area: Area2D = $Attack
 
 @export var max_speed = 100.0
 @export var acceleration = 400
@@ -24,10 +25,17 @@ var jump_count = 0
 @export var max_jump_count = 2
 var status: PlayerState
 
+var enemies_in_range: Array = []
+var is_attacking = false
+var attack_offset_x = 20
+
 func _ready() -> void:
 	go_to_idle_state()
 
 func _physics_process(delta: float) -> void:
+	
+	if Input.is_action_just_pressed("attack"):
+		try_attack()
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -162,8 +170,11 @@ func update_direction():
 	
 	if direction < 0:
 		anim.flip_h = true
+		attack_area.scale.x = -1
+		
 	elif direction > 0:
 		anim.flip_h = false
+		attack_area.scale.x = 1
 
 func can_jump() -> bool:
 	return jump_count < max_jump_count
@@ -189,3 +200,18 @@ func hit_lethal_area():
 
 func _on_reload_timer_timeout() -> void:
 	get_tree().reload_current_scene()
+
+func try_attack():
+	if enemies_in_range.is_empty():
+		print("Nenhum inimigo na área")
+		return
+
+	print("Atacando inimigo")
+
+func _on_attack_area_entered(area: Area2D) -> void:
+	if area.is_in_group("enemies"):
+		enemies_in_range.append(area.get_parent())
+
+func _on_attack_area_exited(area: Area2D) -> void:
+	if area.get_parent() in enemies_in_range:
+		enemies_in_range.erase(area.get_parent())

@@ -23,8 +23,19 @@ var status: SkeletonState
 var direction = 1
 var can_throw = true
 
+var math_system = MathSystem.new()
+
+var current_question
+var correct_answer
+var options
+
+var balloon
+@export var operation_type: String = "mult"
+
 func _ready() -> void:
 	go_to_walk_state()
+	generate_math()
+	spawn_balloon()
 
 func _physics_process(delta: float) -> void:
 
@@ -83,6 +94,9 @@ func hurt_state(_delta):
 	pass
 	
 func take_damage():
+	if balloon:
+		balloon.queue_free()
+	
 	go_to_hurt_state()
 
 func throw_bone():
@@ -96,3 +110,13 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "attack":
 		go_to_walk_state()
 		return
+
+func generate_math():
+	var data = math_system.generate(operation_type)
+	
+	current_question = data["question"]
+	correct_answer = data["answer"]
+	options = data["options"]
+
+func spawn_balloon():
+	balloon = DialogManager.show_balloon(self, current_question)
