@@ -142,6 +142,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qsoyl"]
 size = Vector2(25, 43.333332)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6nm46"]
+size = Vector2(40, 43.333)
+
 [node name="Player" type="CharacterBody2D" unique_id=1649635526 groups=["player"]]
 z_index = 1
 scale = Vector2(0.6, 0.6)
@@ -150,19 +153,36 @@ collision_mask = 9
 script = ExtResource("1_e4p34")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=889034404]
-position = Vector2(1, 1)
 shape = SubResource("CapsuleShape2D_rfe5m")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=330861183]
-position = Vector2(2, -2)
+position = Vector2(0, -3.9)
 sprite_frames = SubResource("SpriteFrames_ef06p")
-animation = &"hurt"
+animation = &"walk"
 
 [node name="HitBox" type="Area2D" parent="." unique_id=258012614]
+collision_layer = 2
+collision_mask = 20
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=44482278]
 position = Vector2(0.8333335, -3.973643e-07)
 shape = SubResource("RectangleShape2D_qsoyl")
 debug_color = Color(0.9686616, 0.061992593, 0.4261249, 0.41960785)
 
+[node name="Attack" type="Area2D" parent="." unique_id=232878380]
+collision_layer = 32
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack" unique_id=235176035]
+position = Vector2(20, 0)
+shape = SubResource("RectangleShape2D_6nm46")
+debug_color = Color(0, 0.64432645, 0.28915563, 0.41960785)
+
+[node name="Node2D" type="Node2D" parent="Attack" unique_id=1749913402]
+
+[node name="ReloadTimer" type="Timer" parent="." unique_id=2110003079]
+
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="area_entered" from="Attack" to="." method="_on_attack_area_entered"]
+[connection signal="area_exited" from="Attack" to="." method="_on_attack_area_exited"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

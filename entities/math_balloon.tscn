@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://eciecqtihs4o"]
+
+[ext_resource type="Script" uid="uid://dmqjv4daor1lf" path="res://scripts/math_balloon.gd" id="1_qruuv"]
+
+[node name="Node2D" type="Node2D" unique_id=1785592165]
+script = ExtResource("1_qruuv")
+
+[node name="Panel" type="Panel" parent="." unique_id=564626126]
+offset_right = 20.0
+offset_bottom = 10.0
+
+[node name="Label" type="Label" parent="Panel" unique_id=505231175]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 4
