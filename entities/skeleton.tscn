@@ -163,7 +163,7 @@ script = ExtResource("3_fpmxe")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1861034718]
 position = Vector2(0, 0.1)
 sprite_frames = SubResource("SpriteFrames_r6xse")
-animation = &"walk"
+animation = &"hurt"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=956807591]
 position = Vector2(0, 3)

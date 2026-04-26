@@ -9,7 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://1xlmgysv4bop" path="res://sprites/Seasonal Tilesets/3 - Tropics/Background parts/3 - Background_clouds.png" id="6_7xb8y"]
 [ext_resource type="Texture2D" uid="uid://d1w88tl45lu5" path="res://sprites/Seasonal Tilesets/3 - Tropics/Background parts/1 - Waters_version_1.png" id="7_34ia6"]
 [ext_resource type="Texture2D" uid="uid://du7bk7yrvm1vw" path="res://sprites/Seasonal Tilesets/3 - Tropics/Background parts/2 - Waters_version_2.png" id="8_d18o5"]
+[ext_resource type="Script" uid="uid://cpaf21edunayn" path="res://scripts/warning_sign.gd" id="11_ei81g"]
 [ext_resource type="PackedScene" uid="uid://c8we1ury3us0n" path="res://entities/skeleton.tscn" id="12_ei81g"]
+[ext_resource type="Texture2D" uid="uid://nu01lgytri8i" path="res://sprites/Mini FX, Items & UI/Mini UI/Speech_Emotes (16 x 16).png" id="12_ytc0w"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t8vtq"]
 animations = [{
@@ -27,6 +29,9 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d18o5"]
 size = Vector2(21, 354)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t8vtq"]
+size = Vector2(31, 20)
 
 [node name="Tropic" type="Node2D" unique_id=593944009]
 metadata/_edit_horizontal_guides_ = [-164.0]
@@ -108,6 +113,7 @@ centered = false
 
 [node name="Skeleton" parent="." unique_id=2002026928 instance=ExtResource("12_ei81g")]
 position = Vector2(180, 155)
+operation_type = "div"
 
 [node name="Skeleton2" parent="." unique_id=163780925 instance=ExtResource("12_ei81g")]
 position = Vector2(127, 120)
@@ -127,5 +133,23 @@ position = Vector2(157, -8)
 visibility_layer = 6
 position = Vector2(1002, 48)
 shape = SubResource("RectangleShape2D_d18o5")
+
+[node name="warning_sign" type="Node2D" parent="." unique_id=445145813]
+script = ExtResource("11_ei81g")
+
+[node name="textture" type="Sprite2D" parent="warning_sign" unique_id=29294599]
+visible = false
+position = Vector2(375, 118)
+texture = ExtResource("12_ytc0w")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="area_sign" type="Area2D" parent="warning_sign" unique_id=683102178]
+collision_mask = 2
+
+[node name="collision" type="CollisionShape2D" parent="warning_sign/area_sign" unique_id=66165363]
+visibility_layer = 2
+position = Vector2(374.5, 134)
+shape = SubResource("RectangleShape2D_t8vtq")
 
 [editable path="Camera"]
