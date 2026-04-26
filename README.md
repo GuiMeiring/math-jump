@@ -12,6 +12,7 @@ O projeto foi pensado para evoluir para:
 - divisão
 - fatorial
 - raiz
+- potenciação
 - quatro cenários ao longo da subida
 - boss final no fim do percurso
 
@@ -144,46 +145,6 @@ math-jump/
 - `entities/skeleton.tscn`: cena do skeleton
 - `scene/tropic.tscn`: fase principal atual
 
-## Diretrizes de Desenvolvimento
-
-Este repositório segue as orientações do `AGENTS.md`.
-
-Princípios mais importantes:
-
-- não alterar muitos sistemas ao mesmo tempo
-- antes de modificar, entender a cena e os scripts envolvidos
-- manter nomes claros para variáveis, funções e cenas
-- evitar código duplicado
-- preferir funções pequenas e específicas
-- não quebrar cenas existentes
-- sempre explicar quais arquivos foram alterados e por quê
-
-## Padrões Esperados no Código
-
-- usar sinais para comunicação entre sistemas quando fizer sentido
-- usar `@onready` para referências de nodes
-- usar `@export` para valores ajustáveis no editor
-- validar referências antes de acessar nodes que podem não existir
-- usar `call_deferred()` ao adicionar nodes em momentos sensíveis da árvore
-
-## Arquitetura Esperada para Evolução
-
-Direção desejada para o projeto:
-
-- player separado por responsabilidades de movimento, combate e estados
-- inimigos com estados claros como `walk`, `attack`, `hurt` e `dead`
-- sistema de perguntas matemáticas desacoplado dos inimigos
-- UI de perguntas separada da lógica de geração das contas
-- boss final reaproveitando sistemas existentes sempre que possível
-
-## Fluxo Recomendado para Novas Implementações
-
-Antes de implementar qualquer alteração:
-
-1. Ler os scripts relacionados.
-2. Identificar dependências.
-3. Explicar a solução proposta.
-4. Fazer alterações pequenas e testáveis.
 
 ## Convenção de Commits
 
@@ -214,4 +175,5 @@ Ainda são passos naturais de evolução:
 - adicionar mais inimigos e cenários
 - introduzir progressão vertical mais completa
 - implementar boss final
+- sistema de ataque do player
 
