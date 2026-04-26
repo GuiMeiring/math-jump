@@ -9,6 +9,8 @@ var dialog_box_position := Vector2.ZERO
 
 var is_message_active := false
 var can_advance_message := false
+var balloons_by_owner := {}
+var math_state_by_owner := {}
 
 func start_message(position: Vector2, lines: Array[String]):
 	if is_message_active:
@@ -40,11 +42,27 @@ func _unhandled_input(event):
 			return
 		show_text()
 
-func show_balloon(target: Node2D, text: String):
+func show_balloon(target: Node2D, text: String, owner_id := ""):
+	if owner_id != "":
+		var previous_balloon = balloons_by_owner.get(owner_id)
+		if is_instance_valid(previous_balloon):
+			previous_balloon.queue_free()
+		balloons_by_owner.erase(owner_id)
+	
 	var box = dialog_box_scene.instantiate()
 	get_tree().root.call_deferred("add_child", box)
 	
 	box.display_text(text)
 	box.target = target
 	
+	if owner_id != "":
+		balloons_by_owner[owner_id] = box
+	
 	return box
+
+func save_math_state(owner_id: String, data: Dictionary):
+	math_state_by_owner[owner_id] = data.duplicate(true)
+
+func get_math_state(owner_id: String) -> Dictionary:
+	var data = math_state_by_owner.get(owner_id, {})
+	return data.duplicate(true)

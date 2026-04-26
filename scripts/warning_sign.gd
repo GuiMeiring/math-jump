@@ -11,15 +11,12 @@ const lines: Array[String] = [
 	"...COMEÇANDO!",
 ]
 
-func _unhandled_input(event):
-	if area_sign.get_overlapping_bodies().size() > 0:
-		textture.show()
-		if event.is_action_pressed("interact") && !DialogManager.is_message_active:
-			textture.hide()
-			print("Aqui")
-			DialogManager.start_message(global_position, lines)
-		else:
-			textture.hide()
-			if DialogManager.dialog_box != null:
-				DialogManager.dialog_box.queue_free()
-				DialogManager.is_message_active = false
+func can_interact() -> bool:
+	return area_sign.get_overlapping_bodies().size() > 0
+
+func _process(_delta: float) -> void:
+	textture.visible = can_interact() and not DialogManager.is_message_active
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("interact") and can_interact() and not DialogManager.is_message_active:
+		DialogManager.start_message(textture.global_position, lines)
