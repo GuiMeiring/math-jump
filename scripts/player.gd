@@ -15,10 +15,15 @@ enum PlayerState {
 @onready var hit_box: Area2D = $HitBox
 @onready var hit_box_collision_shape: CollisionShape2D = $HitBox/CollisionShape2D
 @onready var attack_area: Area2D = $Attack
+@onready var attack_feedback_container: CenterContainer = $AttackFeedbackLayer/AttackFeedbackContainer
+@onready var attack_feedback_label: Label = $AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackLabel
+@onready var attack_feedback_timer: Timer = $AttackFeedbackLayer/AttackFeedbackTimer
 
 @export var max_speed = 100.0
 @export var acceleration = 400
 @export var deceleration = 400
+@export var no_enemy_attack_message := "Nenhum inimigo encontrado!"
+@export var attack_feedback_duration := 1.2
 const JUMP_VELOCITY = -300.0
 const STANDING_BODY_HEIGHT := 40.0
 const STANDING_BODY_Y := 0.0
@@ -40,15 +45,15 @@ var attack_offset_x = 20
 
 func _ready() -> void:
 	go_to_idle_state()
+	hide_attack_feedback()
 
 func _physics_process(delta: float) -> void:
-	
 	if Input.is_action_just_pressed("attack"):
 		try_attack()
-	
+
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-	
+
 	match status:
 		PlayerState.idle:
 			idle_state(delta)
@@ -62,9 +67,9 @@ func _physics_process(delta: float) -> void:
 			duck_state(delta)
 		PlayerState.hurt:
 			hurt_state(delta)
-	
+
 	check_lethal_overlaps()
-	
+
 	move_and_slide()
 
 func go_to_idle_state():
@@ -90,7 +95,7 @@ func go_to_duck_state():
 	anim.play("duck")
 	velocity.x = 0
 	set_duck_collision(true)
-	
+
 func exit_from_duck_state():
 	set_duck_collision(false)
 
@@ -106,58 +111,58 @@ func idle_state(delta):
 	if Input.is_action_just_pressed("jump"):
 		go_to_jump_state()
 		return
-	
+
 	if velocity.x != 0:
 		go_to_walk_state()
 		return
-	
+
 	if Input.is_action_pressed("duck"):
 		go_to_duck_state()
 		return
-	
+
 func walk_state(delta):
 	move(delta)
 	if Input.is_action_pressed("duck"):
 		go_to_duck_state()
 		return
-	
+
 	if velocity.x == 0:
 		go_to_idle_state()
 		return
-	
+
 	if Input.is_action_just_pressed("jump"):
 		go_to_jump_state()
 		return
-	
+
 	if !is_on_floor():
 		jump_count += 1
 		go_to_fall_state()
 		return
-	
+
 func jump_state(delta):
 	move(delta)
-	
+
 	if Input.is_action_just_pressed("jump") && can_jump():
 		go_to_jump_state()
 		return
-	
+
 	if velocity.y > 0:
 		go_to_fall_state()
 		return
 
 func fall_state(delta):
 	move(delta)
-	
+
 	if Input.is_action_just_pressed("jump") && can_jump():
 		go_to_jump_state()
 		return
-	
+
 	if is_on_floor():
 		jump_count = 0
 		if Input.is_action_pressed("duck"):
 			go_to_duck_state()
 			return
-		
+
 		if velocity.x == 0:
 			go_to_idle_state()
 		else:
@@ -177,7 +182,7 @@ func hurt_state(_delta):
 
 func move(delta):
 	update_direction()
-	
+
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
@@ -185,11 +190,11 @@ func move(delta):
 
 func update_direction():
 	direction = Input.get_axis("left", "right")
-	
+
 	if direction < 0:
 		anim.flip_h = true
 		attack_area.scale.x = -1
-		
+
 	elif direction > 0:
 		anim.flip_h = false
 		attack_area.scale.x = 1
@@ -206,14 +211,14 @@ func get_facing_direction() -> int:
 func is_defending_against(area: Area2D) -> bool:
 	if not is_ducking():
 		return false
-	
+
 	if not area.has_method("get_direction"):
 		return false
-	
+
 	var projectile_direction = sign(area.get_direction())
 	if projectile_direction == 0:
 		return false
-	
+
 	return get_facing_direction() == -projectile_direction
 
 func set_duck_collision(is_ducking_state: bool):
@@ -226,7 +231,7 @@ func set_duck_collision(is_ducking_state: bool):
 func check_lethal_overlaps():
 	if status == PlayerState.hurt:
 		return
-	
+
 	for area in hit_box.get_overlapping_areas():
 		if area.is_in_group("lethalArea") and not is_defending_against(area):
 			hit_lethal_area()
@@ -235,7 +240,7 @@ func check_lethal_overlaps():
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if status == PlayerState.hurt:
 		return
-	
+
 	if area.is_in_group("enemies"):
 		hirt_enemy(area)
 	elif area.is_in_group("lethalArea") && not is_defending_against(area):
@@ -243,11 +248,9 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 func hirt_enemy(area: Area2D):
 	if velocity.y > 0:
-		# inimigo morre
 		area.get_parent().take_damage()
 		go_to_jump_state()
 	else:
-		# player morre
 		if status != PlayerState.hurt:
 			go_to_hurt_state()
 
@@ -259,10 +262,16 @@ func _on_reload_timer_timeout() -> void:
 
 func try_attack():
 	if enemies_in_range.is_empty():
-		print("Nenhum inimigo na área")
+		show_attack_feedback(no_enemy_attack_message)
 		return
 
-	print("Atacando inimigo")
+func show_attack_feedback(message: String) -> void:
+	attack_feedback_label.text = message
+	attack_feedback_container.show()
+	attack_feedback_timer.start(attack_feedback_duration)
+
+func hide_attack_feedback() -> void:
+	attack_feedback_container.hide()
 
 func _on_attack_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemies"):
@@ -271,3 +280,6 @@ func _on_attack_area_entered(area: Area2D) -> void:
 func _on_attack_area_exited(area: Area2D) -> void:
 	if area.get_parent() in enemies_in_range:
 		enemies_in_range.erase(area.get_parent())
+
+func _on_attack_feedback_timer_timeout() -> void:
+	hide_attack_feedback()
