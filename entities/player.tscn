@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://d2huysynysmyy" path="res://sprites/Sprite Pack 7/3 - Gordon/Jump (48 x 64).png" id="3_rfe5m"]
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="4_6gx7s"]
 [ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="5_5h5u0"]
+[ext_resource type="Texture2D" uid="uid://c6ij8xwy2ad86" path="res://sprites/Sprite Pack 7/3 - Gordon/Up_swing (80 x 64).png" id="6_0yw1t"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rfe5m"]
 radius = 12.0
@@ -66,8 +67,62 @@ region = Rect2(192, 0, 48, 48)
 atlas = ExtResource("3_e4p34")
 region = Rect2(240, 0, 48, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_0"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(0, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_1"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(80, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_2"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(160, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_3"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(240, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_4"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(320, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_5"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(400, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_6"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(480, 0, 80, 64)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ef06p"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack_6")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 12.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0i614")
@@ -211,10 +266,10 @@ patch_margin_bottom = 4
 
 [node name="LabelMargin" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
 
 [node name="AttackFeedbackLabel" type="Label" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin"]
 custom_minimum_size = Vector2(220, 24)
@@ -234,5 +289,6 @@ one_shot = true
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
 [connection signal="area_entered" from="Attack" to="." method="_on_attack_area_entered"]
 [connection signal="area_exited" from="Attack" to="." method="_on_attack_area_exited"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="AttackFeedbackLayer/AttackFeedbackTimer" to="." method="_on_attack_feedback_timer_timeout"]

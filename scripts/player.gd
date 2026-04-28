@@ -8,6 +8,7 @@ enum PlayerState {
 	jump,
 	fall,
 	duck,
+	attack,
 	hurt
 }
 
@@ -24,11 +25,11 @@ enum PlayerState {
 @export var max_speed = 100.0
 @export var acceleration = 400
 @export var deceleration = 400
-@export var no_enemy_attack_message := "Nenhum inimigo encontrado!"
-@export var attack_success_message := "Resposta correta!"
 @export var attack_fail_message := "Resposta errada!"
 @export var attack_timeout_message := "Tempo esgotado!"
 @export var attack_feedback_duration := 1.2
+const DEFAULT_SPRITE_POSITION := Vector2(0, -3.9)
+const ATTACK_SPRITE_Y := -11.9
 const JUMP_VELOCITY = -300.0
 const STANDING_BODY_HEIGHT := 40.0
 const STANDING_BODY_Y := 0.0
@@ -46,10 +47,11 @@ var status: PlayerState
 
 var enemies_in_range: Array = []
 var active_attack_modal
-var is_attacking = false
-var attack_offset_x = 20
+var pending_attack_target: Node = null
+var pending_attack_feedback_message := ""
 
 func _ready() -> void:
+	set_default_sprite_position()
 	go_to_idle_state()
 	hide_attack_feedback()
 
@@ -57,7 +59,7 @@ func _physics_process(delta: float) -> void:
 	if can_attack() and Input.is_action_just_pressed("attack"):
 		try_attack()
 
-	if not is_on_floor():
+	if not is_on_floor() and not should_lock_attack_movement():
 		velocity += get_gravity() * delta
 
 	match status:
@@ -71,6 +73,8 @@ func _physics_process(delta: float) -> void:
 			fall_state(delta)
 		PlayerState.duck:
 			duck_state(delta)
+		PlayerState.attack:
+			attack_state(delta)
 		PlayerState.hurt:
 			hurt_state(delta)
 
@@ -79,24 +83,29 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func go_to_idle_state():
+	set_default_sprite_position()
 	status = PlayerState.idle
 	anim.play("idle")
 
 func go_to_walk_state():
+	set_default_sprite_position()
 	status = PlayerState.walk
 	anim.play("walk")
 
 func go_to_jump_state():
+	set_default_sprite_position()
 	status = PlayerState.jump
 	anim.play("jump")
 	velocity.y = JUMP_VELOCITY
 	jump_count += 1
 
 func go_to_fall_state():
+	set_default_sprite_position()
 	status = PlayerState.fall
 	anim.play("fall")
 
 func go_to_duck_state():
+	set_default_sprite_position()
 	status = PlayerState.duck
 	anim.play("duck")
 	velocity.x = 0
@@ -107,10 +116,18 @@ func exit_from_duck_state():
 
 func go_to_hurt_state():
 	exit_from_duck_state()
+	clear_pending_attack()
+	set_default_sprite_position()
 	status = PlayerState.hurt
 	anim.play("hurt")
 	velocity.x = 0
 	reload_timer.start()
+
+func go_to_attack_state() -> void:
+	update_attack_sprite_position()
+	status = PlayerState.attack
+	anim.play("attack")
+	velocity.x = 0
 
 func idle_state(delta):
 	move(delta)
@@ -183,6 +200,13 @@ func duck_state(_delta):
 		go_to_idle_state()
 		return
 
+func attack_state(_delta):
+	if should_lock_attack_movement():
+		velocity = Vector2.ZERO
+		return
+
+	velocity.x = 0
+
 func hurt_state(_delta):
 	pass
 
@@ -193,6 +217,12 @@ func move(delta):
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+
+func set_default_sprite_position() -> void:
+	anim.position = DEFAULT_SPRITE_POSITION
+
+func update_attack_sprite_position() -> void:
+	anim.position = Vector2(DEFAULT_SPRITE_POSITION.x, ATTACK_SPRITE_Y)
 
 func update_direction():
 	direction = Input.get_axis("left", "right")
@@ -209,7 +239,10 @@ func can_jump() -> bool:
 	return jump_count < max_jump_count
 
 func can_attack() -> bool:
-	return status != PlayerState.hurt and not is_ducking() and not is_instance_valid(active_attack_modal)
+	return status != PlayerState.hurt and status != PlayerState.attack and not is_ducking() and not is_instance_valid(active_attack_modal)
+
+func should_lock_attack_movement() -> bool:
+	return status == PlayerState.attack and is_instance_valid(pending_attack_target)
 
 func is_ducking() -> bool:
 	return status == PlayerState.duck
@@ -238,7 +271,7 @@ func set_duck_collision(is_ducking_state: bool):
 	hit_box_collision_shape.position.y = DUCK_HITBOX_Y if is_ducking_state else STANDING_HITBOX_Y
 
 func check_lethal_overlaps():
-	if status == PlayerState.hurt:
+	if status == PlayerState.hurt or status == PlayerState.attack:
 		return
 
 	for area in hit_box.get_overlapping_areas():
@@ -247,7 +280,7 @@ func check_lethal_overlaps():
 			return
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if status == PlayerState.hurt:
+	if status == PlayerState.hurt or status == PlayerState.attack:
 		return
 
 	if area.is_in_group("enemies"):
@@ -275,7 +308,8 @@ func try_attack():
 
 	var target_enemy = get_attack_target()
 	if target_enemy == null:
-		show_attack_feedback(no_enemy_attack_message)
+		pending_attack_feedback_message = ""
+		go_to_attack_state()
 		return
 
 	if not target_enemy.has_method("get_math_prompt_data"):
@@ -283,7 +317,8 @@ func try_attack():
 
 	var math_prompt: Dictionary = target_enemy.get_math_prompt_data()
 	if math_prompt.is_empty():
-		show_attack_feedback(no_enemy_attack_message)
+		pending_attack_feedback_message = ""
+		go_to_attack_state()
 		return
 
 	open_attack_modal(target_enemy, math_prompt)
@@ -334,12 +369,49 @@ func _on_math_attack_modal_answered(target_enemy: Node, is_correct: bool, did_ti
 		return
 
 	if is_correct:
-		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
-			target_enemy.take_damage()
-		show_attack_feedback(attack_success_message)
+		if not is_instance_valid(target_enemy) or not target_enemy.has_method("take_damage"):
+			return
+
+		pending_attack_target = target_enemy
+		pending_attack_feedback_message = ""
+		go_to_attack_state()
 		return
 
 	show_attack_feedback(attack_fail_message)
+
+func clear_pending_attack() -> void:
+	pending_attack_target = null
+	pending_attack_feedback_message = ""
+
+func resolve_finished_attack() -> void:
+	var target_enemy = pending_attack_target
+	var message = pending_attack_feedback_message
+
+	clear_pending_attack()
+
+	if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
+		target_enemy.take_damage()
+
+func resume_state_after_attack() -> void:
+	if status != PlayerState.attack:
+		return
+
+	if not is_on_floor():
+		if velocity.y < 0:
+			set_default_sprite_position()
+			status = PlayerState.jump
+			anim.play("jump")
+		else:
+			set_default_sprite_position()
+			status = PlayerState.fall
+			anim.play("fall")
+		return
+
+	if direction == 0:
+		go_to_idle_state()
+		return
+
+	go_to_walk_state()
 
 func show_attack_feedback(message: String) -> void:
 	attack_feedback_label.text = message
@@ -364,3 +436,10 @@ func _on_attack_area_exited(area: Area2D) -> void:
 
 func _on_attack_feedback_timer_timeout() -> void:
 	hide_attack_feedback()
+
+func _on_animated_sprite_2d_animation_finished() -> void:
+	if anim.animation != "attack" or status != PlayerState.attack:
+		return
+
+	resolve_finished_attack()
+	resume_state_after_attack()
