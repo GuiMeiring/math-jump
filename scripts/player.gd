@@ -385,7 +385,6 @@ func clear_pending_attack() -> void:
 
 func resolve_finished_attack() -> void:
 	var target_enemy = pending_attack_target
-	var message = pending_attack_feedback_message
 
 	clear_pending_attack()
 

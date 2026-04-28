@@ -6,7 +6,6 @@ signal answered(target: Node, is_correct: bool, did_timeout: bool)
 @export var option_default_font_color := Color(0, 0, 0, 1)
 @export var option_selected_font_color := Color(0.698039, 0.172549, 0.129412, 1)
 
-@onready var modal_root: Control = $ModalRoot
 @onready var question_label: Label = $ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/QuestionLabel
 @onready var timer_bar: ProgressBar = $ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/TimerGroup/TimerBar
 @onready var countdown_label: Label = $ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/TimerGroup/CountdownLabel
@@ -24,7 +23,6 @@ var focused_button_index := 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
-	expand_to_viewport()
 	question_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	for index in range(option_buttons.size()):
 		option_buttons[index].focus_entered.connect(_on_option_button_selected.bind(index))
@@ -32,10 +30,6 @@ func _ready() -> void:
 	hide()
 	set_process(false)
 	set_process_unhandled_input(true)
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_RESIZED:
-		expand_to_viewport()
 
 func open_modal(question_text: String, answer_options: Array, correct_option: int, enemy_target: Node) -> void:
 	target = enemy_target
@@ -106,15 +100,6 @@ func update_timer_ui() -> void:
 	var countdown_value := maxi(int(ceil(remaining_time)), 0)
 	countdown_label.visible = remaining_time <= 5.0
 	countdown_label.text = str(countdown_value)
-
-func expand_to_viewport() -> void:
-	var viewport_size = get_viewport_rect().size
-	position = Vector2.ZERO
-	size = viewport_size
-
-	if is_instance_valid(modal_root):
-		modal_root.position = Vector2.ZERO
-		modal_root.size = viewport_size
 
 func move_focus(direction_step: int) -> void:
 	var visible_buttons = get_visible_buttons()
