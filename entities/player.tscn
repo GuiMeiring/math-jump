@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b6ktoh3b0krky" path="res://sprites/Sprite Pack 7/3 - Gordon/Running (48 x 48).png" id="3_e4p34"]
 [ext_resource type="Texture2D" uid="uid://d2huysynysmyy" path="res://sprites/Sprite Pack 7/3 - Gordon/Jump (48 x 64).png" id="3_rfe5m"]
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="4_6gx7s"]
+[ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="5_5h5u0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rfe5m"]
 radius = 12.0
@@ -188,23 +189,44 @@ layer = 10
 
 [node name="AttackFeedbackContainer" type="CenterContainer" parent="AttackFeedbackLayer"]
 visible = false
-offset_top = -34.0
 offset_right = 0.0
-offset_bottom = -6.0
-anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
-[node name="AttackFeedbackLabel" type="Label" parent="AttackFeedbackLayer/AttackFeedbackContainer"]
+[node name="AttackFeedbackBox" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="Background" type="NinePatchRect" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox"]
+layout_mode = 2
+texture = ExtResource("5_5h5u0")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="LabelMargin" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="AttackFeedbackLabel" type="Label" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin"]
+custom_minimum_size = Vector2(220, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("4_6gx7s")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 9
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="AttackFeedbackTimer" type="Timer" parent="AttackFeedbackLayer"]
 one_shot = true

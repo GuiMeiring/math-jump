@@ -18,7 +18,7 @@ enum PlayerState {
 @onready var hit_box_collision_shape: CollisionShape2D = $HitBox/CollisionShape2D
 @onready var attack_area: Area2D = $Attack
 @onready var attack_feedback_container: CenterContainer = $AttackFeedbackLayer/AttackFeedbackContainer
-@onready var attack_feedback_label: Label = $AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackLabel
+@onready var attack_feedback_label: Label = $AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin/AttackFeedbackLabel
 @onready var attack_feedback_timer: Timer = $AttackFeedbackLayer/AttackFeedbackTimer
 
 @export var max_speed = 100.0
