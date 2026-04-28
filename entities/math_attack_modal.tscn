@@ -93,7 +93,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0, 0, 0, 0)
 
 [node name="CenterContainer" type="CenterContainer" parent="ModalRoot"]
 layout_mode = 1
@@ -161,6 +161,7 @@ theme_override_constants/separation = 6
 
 [node name="OptionButton1" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
 layout_mode = 2
+focus_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_qm5l6")
 theme_override_font_sizes/font_size = 10
@@ -171,6 +172,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
 
 [node name="OptionButton2" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
 layout_mode = 2
+focus_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_qm5l6")
 theme_override_font_sizes/font_size = 10
@@ -181,6 +183,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
 
 [node name="OptionButton3" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
 layout_mode = 2
+focus_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_qm5l6")
 theme_override_font_sizes/font_size = 10

@@ -54,7 +54,7 @@ func _ready() -> void:
 	hide_attack_feedback()
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("attack"):
+	if can_attack() and Input.is_action_just_pressed("attack"):
 		try_attack()
 
 	if not is_on_floor():
@@ -208,6 +208,9 @@ func update_direction():
 func can_jump() -> bool:
 	return jump_count < max_jump_count
 
+func can_attack() -> bool:
+	return status != PlayerState.hurt and not is_ducking() and not is_instance_valid(active_attack_modal)
+
 func is_ducking() -> bool:
 	return status == PlayerState.duck
 
@@ -267,7 +270,7 @@ func _on_reload_timer_timeout() -> void:
 	get_tree().reload_current_scene()
 
 func try_attack():
-	if is_instance_valid(active_attack_modal):
+	if not can_attack():
 		return
 
 	var target_enemy = get_attack_target()
