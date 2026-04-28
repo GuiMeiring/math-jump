@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const MATH_ATTACK_MODAL = preload("res://entities/math_attack_modal.tscn")
+
 enum PlayerState {
 	idle,
 	walk,
@@ -23,6 +25,9 @@ enum PlayerState {
 @export var acceleration = 400
 @export var deceleration = 400
 @export var no_enemy_attack_message := "Nenhum inimigo encontrado!"
+@export var attack_success_message := "Resposta correta!"
+@export var attack_fail_message := "Resposta errada!"
+@export var attack_timeout_message := "Tempo esgotado!"
 @export var attack_feedback_duration := 1.2
 const JUMP_VELOCITY = -300.0
 const STANDING_BODY_HEIGHT := 40.0
@@ -40,6 +45,7 @@ var jump_count = 0
 var status: PlayerState
 
 var enemies_in_range: Array = []
+var active_attack_modal
 var is_attacking = false
 var attack_offset_x = 20
 
@@ -261,9 +267,76 @@ func _on_reload_timer_timeout() -> void:
 	get_tree().reload_current_scene()
 
 func try_attack():
-	if enemies_in_range.is_empty():
+	if is_instance_valid(active_attack_modal):
+		return
+
+	var target_enemy = get_attack_target()
+	if target_enemy == null:
 		show_attack_feedback(no_enemy_attack_message)
 		return
+
+	if not target_enemy.has_method("get_math_prompt_data"):
+		return
+
+	var math_prompt: Dictionary = target_enemy.get_math_prompt_data()
+	if math_prompt.is_empty():
+		show_attack_feedback(no_enemy_attack_message)
+		return
+
+	open_attack_modal(target_enemy, math_prompt)
+
+func get_attack_target():
+	var valid_enemies: Array = []
+
+	for enemy in enemies_in_range:
+		if not is_instance_valid(enemy):
+			continue
+
+		if enemy.has_method("is_attackable") and not enemy.is_attackable():
+			continue
+
+		valid_enemies.append(enemy)
+
+	enemies_in_range = valid_enemies
+	if enemies_in_range.is_empty():
+		return null
+
+	var closest_enemy = enemies_in_range[0]
+	var closest_distance = global_position.distance_squared_to(closest_enemy.global_position)
+
+	for enemy in enemies_in_range:
+		var current_distance = global_position.distance_squared_to(enemy.global_position)
+		if current_distance < closest_distance:
+			closest_enemy = enemy
+			closest_distance = current_distance
+
+	return closest_enemy
+
+func open_attack_modal(target_enemy: Node, math_prompt: Dictionary) -> void:
+	active_attack_modal = MATH_ATTACK_MODAL.instantiate()
+	get_tree().root.add_child(active_attack_modal)
+	active_attack_modal.answered.connect(_on_math_attack_modal_answered)
+	active_attack_modal.open_modal(
+		math_prompt.get("question", ""),
+		math_prompt.get("options", []),
+		int(math_prompt.get("answer", 0)),
+		target_enemy
+	)
+
+func _on_math_attack_modal_answered(target_enemy: Node, is_correct: bool, did_timeout: bool) -> void:
+	active_attack_modal = null
+
+	if did_timeout:
+		show_attack_feedback(attack_timeout_message)
+		return
+
+	if is_correct:
+		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
+			target_enemy.take_damage()
+		show_attack_feedback(attack_success_message)
+		return
+
+	show_attack_feedback(attack_fail_message)
 
 func show_attack_feedback(message: String) -> void:
 	attack_feedback_label.text = message
@@ -274,12 +347,17 @@ func hide_attack_feedback() -> void:
 	attack_feedback_container.hide()
 
 func _on_attack_area_entered(area: Area2D) -> void:
-	if area.is_in_group("enemies"):
-		enemies_in_range.append(area.get_parent())
+	if not area.is_in_group("enemies"):
+		return
+
+	var enemy = area.get_parent()
+	if enemy not in enemies_in_range:
+		enemies_in_range.append(enemy)
 
 func _on_attack_area_exited(area: Area2D) -> void:
-	if area.get_parent() in enemies_in_range:
-		enemies_in_range.erase(area.get_parent())
+	var enemy = area.get_parent()
+	if enemy in enemies_in_range:
+		enemies_in_range.erase(enemy)
 
 func _on_attack_feedback_timer_timeout() -> void:
 	hide_attack_feedback()

@@ -115,6 +115,16 @@ func take_damage():
 	
 	go_to_hurt_state()
 
+func is_attackable() -> bool:
+	return status != SkeletonState.hurt
+
+func get_math_prompt_data() -> Dictionary:
+	return {
+		"question": current_question,
+		"answer": correct_answer,
+		"options": options.duplicate()
+	}
+
 func throw_bone():
 	if get_parent() == null:
 		return

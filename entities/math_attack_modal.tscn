@@ -1,0 +1,194 @@
+[gd_scene format=3 uid="uid://b4rm30pm2li7g"]
+
+[ext_resource type="Script" path="res://scripts/math_attack_modal.gd" id="1_4j2sl"]
+[ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="2_u0yrd"]
+[ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="3_qm5l6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_background"]
+bg_color = Color(0.870588, 0.839216, 0.741176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
+bg_color = Color(0.262745, 0.584314, 0.317647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.956863, 0.937255, 0.878431, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.913725, 0.886275, 0.788235, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.729412, 0.85098, 0.596078, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_disabled"]
+bg_color = Color(0.678431, 0.658824, 0.615686, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.196078, 0.145098, 0.121569, 1)
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[node name="MathAttackModal" type="Control"]
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4j2sl")
+
+[node name="ModalRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="ModalRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="ModalRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogContainer" type="MarginContainer" parent="ModalRoot/CenterContainer"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[node name="Background" type="NinePatchRect" parent="ModalRoot/CenterContainer/DialogContainer"]
+layout_mode = 2
+texture = ExtResource("2_u0yrd")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="ContentMargin" type="MarginContainer" parent="ModalRoot/CenterContainer/DialogContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Content" type="VBoxContainer" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="QuestionLabel" type="Label" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content"]
+custom_minimum_size = Vector2(224, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_qm5l6")
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimerGroup" type="VBoxContainer" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TimerBar" type="ProgressBar" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/TimerGroup"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBoxFlat_progress_background")
+theme_override_styles/fill = SubResource("StyleBoxFlat_progress_fill")
+
+[node name="CountdownLabel" type="Label" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/TimerGroup"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.698039, 0.172549, 0.129412, 1)
+theme_override_fonts/font = ExtResource("3_qm5l6")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+
+[node name="Answers" type="VBoxContainer" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="OptionButton1" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_qm5l6")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+
+[node name="OptionButton2" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_qm5l6")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+
+[node name="OptionButton3" type="Button" parent="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_qm5l6")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+
+[connection signal="pressed" from="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers/OptionButton1" to="." method="_on_option_button_1_pressed"]
+[connection signal="pressed" from="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers/OptionButton2" to="." method="_on_option_button_2_pressed"]
+[connection signal="pressed" from="ModalRoot/CenterContainer/DialogContainer/ContentMargin/Content/Answers/OptionButton3" to="." method="_on_option_button_3_pressed"]
