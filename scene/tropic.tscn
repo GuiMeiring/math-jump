@@ -113,10 +113,11 @@ centered = false
 
 [node name="Skeleton" parent="." unique_id=2002026928 instance=ExtResource("12_ei81g")]
 position = Vector2(180, 155)
-operation_type = "div"
+operation_type = "fact"
 
 [node name="Skeleton2" parent="." unique_id=163780925 instance=ExtResource("12_ei81g")]
 position = Vector2(127, 120)
+operation_type = "pow"
 
 [node name="Limit" type="StaticBody2D" parent="." unique_id=78088808]
 position = Vector2(15, 40)
