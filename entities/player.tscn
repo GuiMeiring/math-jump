@@ -10,6 +10,7 @@
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="4_6gx7s"]
 [ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="5_5h5u0"]
 [ext_resource type="Texture2D" uid="uid://c6ij8xwy2ad86" path="res://sprites/Sprite Pack 7/3 - Gordon/Up_swing (80 x 64).png" id="6_0yw1t"]
+[ext_resource type="Texture2D" uid="uid://ciknmophixagg" path="res://sprites/Mini FX, Items & UI/Common Pick-ups/Heart_Spin (16 x 16).png" id="7_a3r8p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rfe5m"]
 radius = 12.0
@@ -94,6 +95,22 @@ region = Rect2(400, 0, 80, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_attack_6"]
 atlas = ExtResource("6_0yw1t")
 region = Rect2(480, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_0"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_1"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_2"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_3"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ef06p"]
 animations = [{
@@ -196,6 +213,26 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_heart_spin"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_heart_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_heart_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_heart_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_heart_3")
+}],
+"loop": false,
+"name": &"spin",
+"speed": 8.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qsoyl"]
 size = Vector2(25, 43.333332)
 
@@ -206,7 +243,7 @@ size = Vector2(40, 43.333)
 z_index = 1
 scale = Vector2(0.6, 0.6)
 collision_layer = 2
-collision_mask = 9
+collision_mask = 13
 script = ExtResource("1_e4p34")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=889034404]
@@ -239,8 +276,35 @@ debug_color = Color(0, 0.64432645, 0.28915563, 0.41960785)
 
 [node name="ReloadTimer" type="Timer" parent="." unique_id=2110003079]
 
+[node name="HurtTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="AttackFeedbackLayer" type="CanvasLayer" parent="."]
 layer = 10
+
+[node name="HealthLayer" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="HeartsContainer" type="Node2D" parent="HealthLayer"]
+position = Vector2(14, 10)
+scale = Vector2(1.5, 1.5)
+
+[node name="Heart1" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+frame = 0
+
+[node name="Heart2" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
+position = Vector2(10, 0)
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+frame = 0
+
+[node name="Heart3" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
+position = Vector2(20, 0)
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+frame = 0
 
 [node name="AttackFeedbackContainer" type="CenterContainer" parent="AttackFeedbackLayer"]
 visible = false
@@ -290,5 +354,6 @@ one_shot = true
 [connection signal="area_entered" from="Attack" to="." method="_on_attack_area_entered"]
 [connection signal="area_exited" from="Attack" to="." method="_on_attack_area_exited"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="AttackFeedbackLayer/AttackFeedbackTimer" to="." method="_on_attack_feedback_timer_timeout"]

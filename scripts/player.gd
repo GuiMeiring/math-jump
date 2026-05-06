@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 const MATH_ATTACK_MODAL = preload("res://entities/math_attack_modal.tscn")
 
+signal lives_changed(current_lives: int, max_lives: int)
+
 enum PlayerState {
 	idle,
 	walk,
@@ -15,19 +17,36 @@ enum PlayerState {
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var reload_timer: Timer = $ReloadTimer
+@onready var hurt_timer: Timer = $HurtTimer
 @onready var hit_box: Area2D = $HitBox
 @onready var hit_box_collision_shape: CollisionShape2D = $HitBox/CollisionShape2D
 @onready var attack_area: Area2D = $Attack
 @onready var attack_feedback_container: CenterContainer = $AttackFeedbackLayer/AttackFeedbackContainer
 @onready var attack_feedback_label: Label = $AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin/AttackFeedbackLabel
 @onready var attack_feedback_timer: Timer = $AttackFeedbackLayer/AttackFeedbackTimer
+@onready var hearts: Array[AnimatedSprite2D] = [
+	$HealthLayer/HeartsContainer/Heart1,
+	$HealthLayer/HeartsContainer/Heart2,
+	$HealthLayer/HeartsContainer/Heart3
+]
 
 @export var max_speed = 100.0
 @export var acceleration = 400
 @export var deceleration = 400
+@export_range(1, 3) var max_lives := 3
 @export var attack_fail_message := "Resposta errada!"
 @export var attack_timeout_message := "Tempo esgotado!"
 @export var attack_feedback_duration := 1.2
+@export var hurt_recovery_duration := 0.7
+@export var death_reload_delay := 0.9
+@export var fall_damage_min_distance := 220.0
+@export var enemy_contact_cooldown_duration := 1.0
+@export var enemy_contact_knockback_x := 140.0
+@export var enemy_contact_knockback_y := -120.0
+@export var enemy_top_bounce_velocity := -180.0
+@export var enemy_top_push_speed := 90.0
+@export var damage_flash_color := Color(1, 0.35, 0.35, 1)
+@export var default_player_color := Color(1, 1, 1, 1)
 const DEFAULT_SPRITE_POSITION := Vector2(0, -3.9)
 const ATTACK_SPRITE_Y := -11.9
 const JUMP_VELOCITY = -300.0
@@ -44,6 +63,14 @@ var direction = 0
 var jump_count = 0
 @export var max_jump_count = 2
 var status: PlayerState
+var current_lives := 0
+var displayed_lives := 0
+var is_dead := false
+var has_pending_death := false
+var is_damage_recovering := false
+var is_tracking_fall := false
+var fall_start_y := 0.0
+var enemy_contact_cooldown_left := 0.0
 
 var enemies_in_range: Array = []
 var active_attack_modal
@@ -51,11 +78,26 @@ var pending_attack_target: Node = null
 var pending_attack_feedback_message := ""
 
 func _ready() -> void:
+	current_lives = max_lives
+	displayed_lives = max_lives
+	has_pending_death = false
+	is_damage_recovering = false
+	is_tracking_fall = false
+	fall_start_y = global_position.y
+	enemy_contact_cooldown_left = 0.0
+	lives_changed.connect(_on_lives_changed)
+	clear_damage_flash()
 	set_default_sprite_position()
 	go_to_idle_state()
 	hide_attack_feedback()
+	lives_changed.emit(current_lives, max_lives)
 
 func _physics_process(delta: float) -> void:
+	var was_on_floor := is_on_floor()
+
+	if enemy_contact_cooldown_left > 0.0:
+		enemy_contact_cooldown_left = max(enemy_contact_cooldown_left - delta, 0.0)
+
 	if can_attack() and Input.is_action_just_pressed("attack"):
 		try_attack()
 
@@ -78,21 +120,27 @@ func _physics_process(delta: float) -> void:
 		PlayerState.hurt:
 			hurt_state(delta)
 
+	process_enemy_contact_overlap_damage()
 	check_lethal_overlaps()
 
 	move_and_slide()
+	resolve_enemy_body_collisions()
+	process_fall_landing(was_on_floor)
 
 func go_to_idle_state():
+	stop_fall_tracking()
 	set_default_sprite_position()
 	status = PlayerState.idle
 	anim.play("idle")
 
 func go_to_walk_state():
+	stop_fall_tracking()
 	set_default_sprite_position()
 	status = PlayerState.walk
 	anim.play("walk")
 
 func go_to_jump_state():
+	stop_fall_tracking()
 	set_default_sprite_position()
 	status = PlayerState.jump
 	anim.play("jump")
@@ -100,11 +148,13 @@ func go_to_jump_state():
 	jump_count += 1
 
 func go_to_fall_state():
+	start_fall_tracking()
 	set_default_sprite_position()
 	status = PlayerState.fall
 	anim.play("fall")
 
 func go_to_duck_state():
+	stop_fall_tracking()
 	set_default_sprite_position()
 	status = PlayerState.duck
 	anim.play("duck")
@@ -115,13 +165,117 @@ func exit_from_duck_state():
 	set_duck_collision(false)
 
 func go_to_hurt_state():
+	stop_fall_tracking()
 	exit_from_duck_state()
 	clear_pending_attack()
 	set_default_sprite_position()
 	status = PlayerState.hurt
+	is_damage_recovering = true
+	clear_damage_flash()
 	anim.play("hurt")
 	velocity.x = 0
-	reload_timer.start()
+	hurt_timer.start(hurt_recovery_duration)
+
+func start_damage_recovery() -> void:
+	is_damage_recovering = true
+	show_damage_flash()
+	hurt_timer.start(hurt_recovery_duration)
+
+func show_damage_flash() -> void:
+	anim.modulate = damage_flash_color
+
+func clear_damage_flash() -> void:
+	anim.modulate = default_player_color
+
+func start_fall_tracking() -> void:
+	if is_tracking_fall:
+		return
+
+	is_tracking_fall = true
+	fall_start_y = global_position.y
+
+func stop_fall_tracking() -> void:
+	is_tracking_fall = false
+
+func process_fall_landing(was_on_floor: bool) -> void:
+	if not is_tracking_fall:
+		return
+
+	if was_on_floor or not is_on_floor():
+		return
+
+	var fall_distance: float = max(global_position.y - fall_start_y, 0.0)
+	stop_fall_tracking()
+	if fall_damage_min_distance <= 0.0 or fall_distance < fall_damage_min_distance:
+		return
+
+	take_damage()
+
+func resolve_enemy_body_collisions() -> void:
+	for collision_index in get_slide_collision_count():
+		var collision: KinematicCollision2D = get_slide_collision(collision_index)
+		var enemy: Node2D = collision.get_collider() as Node2D
+		if enemy == null or not is_enemy_body(enemy):
+			continue
+
+		if collision.get_normal().dot(Vector2.UP) <= 0.7:
+			continue
+
+		try_take_enemy_contact_damage()
+		push_player_off_enemy(enemy)
+		return
+
+func is_enemy_body(node: Node) -> bool:
+	return node.has_method("is_attackable")
+
+func can_take_enemy_contact_damage() -> bool:
+	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_damage_recovering and enemy_contact_cooldown_left <= 0.0
+
+func try_take_enemy_contact_damage(enemy: Node2D = null) -> bool:
+	if not can_take_enemy_contact_damage():
+		return false
+
+	enemy_contact_cooldown_left = enemy_contact_cooldown_duration
+	apply_enemy_contact_knockback(enemy)
+	take_damage()
+	return true
+
+func apply_enemy_contact_knockback(enemy: Node2D = null) -> void:
+	var push_direction: float = -get_facing_direction()
+	if enemy != null:
+		push_direction = sign(global_position.x - enemy.global_position.x)
+		if push_direction == 0.0:
+			push_direction = -get_facing_direction()
+
+	velocity.x = push_direction * enemy_contact_knockback_x
+	velocity.y = enemy_contact_knockback_y
+	set_default_sprite_position()
+	if velocity.y < 0.0:
+		status = PlayerState.jump
+		anim.play("jump")
+	else:
+		status = PlayerState.fall
+		anim.play("fall")
+
+func process_enemy_contact_overlap_damage() -> void:
+	if not can_take_enemy_contact_damage():
+		return
+
+	for area in hit_box.get_overlapping_areas():
+		if area.is_in_group("enemies"):
+			try_take_enemy_contact_damage(area.get_parent() as Node2D)
+			return
+
+func push_player_off_enemy(enemy: Node2D) -> void:
+	var push_direction: float = sign(global_position.x - enemy.global_position.x)
+	if push_direction == 0.0:
+		push_direction = 1.0 if anim.flip_h else -1.0
+
+	velocity.y = enemy_top_bounce_velocity
+	velocity.x = push_direction * enemy_top_push_speed
+	set_default_sprite_position()
+	status = PlayerState.jump
+	anim.play("jump")
 
 func go_to_attack_state() -> void:
 	update_attack_sprite_position()
@@ -239,7 +393,7 @@ func can_jump() -> bool:
 	return jump_count < max_jump_count
 
 func can_attack() -> bool:
-	return status != PlayerState.hurt and status != PlayerState.attack and not is_ducking() and not is_instance_valid(active_attack_modal)
+	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_ducking() and not is_instance_valid(active_attack_modal)
 
 func should_lock_attack_movement() -> bool:
 	return status == PlayerState.attack and is_instance_valid(pending_attack_target)
@@ -271,7 +425,7 @@ func set_duck_collision(is_ducking_state: bool):
 	hit_box_collision_shape.position.y = DUCK_HITBOX_Y if is_ducking_state else STANDING_HITBOX_Y
 
 func check_lethal_overlaps():
-	if status == PlayerState.hurt or status == PlayerState.attack:
+	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
 		return
 
 	for area in hit_box.get_overlapping_areas():
@@ -280,24 +434,44 @@ func check_lethal_overlaps():
 			return
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if status == PlayerState.hurt or status == PlayerState.attack:
+	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
 		return
 
 	if area.is_in_group("enemies"):
-		hirt_enemy(area)
+		try_take_enemy_contact_damage(area.get_parent() as Node2D)
 	elif area.is_in_group("lethalArea") && not is_defending_against(area):
 		hit_lethal_area()
 
-func hirt_enemy(area: Area2D):
-	if velocity.y > 0:
-		area.get_parent().take_damage()
-		go_to_jump_state()
-	else:
-		if status != PlayerState.hurt:
-			go_to_hurt_state()
-
 func hit_lethal_area():
-	go_to_hurt_state()
+	take_damage()
+
+func take_damage() -> void:
+	if is_dead or status == PlayerState.hurt or is_damage_recovering:
+		return
+
+	current_lives = max(current_lives - 1, 0)
+	has_pending_death = current_lives <= 0
+	lives_changed.emit(current_lives, max_lives)
+
+	if has_pending_death:
+		go_to_hurt_state()
+		return
+
+	start_damage_recovery()
+
+func die() -> void:
+	is_dead = true
+	has_pending_death = false
+	is_damage_recovering = false
+	stop_fall_tracking()
+	clear_damage_flash()
+	exit_from_duck_state()
+	clear_pending_attack()
+	set_default_sprite_position()
+	status = PlayerState.hurt
+	anim.play("hurt")
+	velocity = Vector2.ZERO
+	reload_timer.start(death_reload_delay)
 
 func _on_reload_timer_timeout() -> void:
 	get_tree().reload_current_scene()
@@ -366,6 +540,7 @@ func _on_math_attack_modal_answered(target_enemy: Node, is_correct: bool, did_ti
 
 	if did_timeout:
 		show_attack_feedback(attack_timeout_message)
+		take_damage()
 		return
 
 	if is_correct:
@@ -378,6 +553,7 @@ func _on_math_attack_modal_answered(target_enemy: Node, is_correct: bool, did_ti
 		return
 
 	show_attack_feedback(attack_fail_message)
+	take_damage()
 
 func clear_pending_attack() -> void:
 	pending_attack_target = null
@@ -435,6 +611,72 @@ func _on_attack_area_exited(area: Area2D) -> void:
 
 func _on_attack_feedback_timer_timeout() -> void:
 	hide_attack_feedback()
+
+func _on_hurt_timer_timeout() -> void:
+	if is_dead:
+		return
+
+	if has_pending_death:
+		die()
+		return
+
+	is_damage_recovering = false
+	clear_damage_flash()
+
+	if status != PlayerState.hurt:
+		return
+
+	if not is_on_floor():
+		set_default_sprite_position()
+		if velocity.y < 0:
+			status = PlayerState.jump
+			anim.play("jump")
+		else:
+			go_to_fall_state()
+		return
+
+	if Input.is_action_pressed("duck"):
+		go_to_duck_state()
+		return
+
+	update_direction()
+	if direction == 0:
+		go_to_idle_state()
+		return
+
+	go_to_walk_state()
+
+func _on_lives_changed(updated_lives: int, _total_lives: int) -> void:
+	if updated_lives < displayed_lives:
+		for heart_index in range(updated_lives, displayed_lives):
+			animate_lost_heart(heart_index)
+	else:
+		for heart_index in range(displayed_lives, updated_lives):
+			show_heart(heart_index)
+
+	displayed_lives = updated_lives
+
+func show_heart(heart_index: int) -> void:
+	if heart_index < 0 or heart_index >= hearts.size():
+		return
+
+	var heart = hearts[heart_index]
+	heart.show()
+	heart.stop()
+	heart.frame = 0
+
+func animate_lost_heart(heart_index: int) -> void:
+	if heart_index < 0 or heart_index >= hearts.size():
+		return
+
+	var heart = hearts[heart_index]
+	heart.show()
+	heart.frame = 0
+	heart.play("spin")
+	await heart.animation_finished
+	heart.stop()
+	heart.hide()
+	heart.frame = 0
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation != "attack" or status != PlayerState.attack:
