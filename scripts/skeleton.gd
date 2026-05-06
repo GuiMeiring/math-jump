@@ -23,7 +23,7 @@ var status: SkeletonState
 
 var direction = 1
 var can_throw = true
-@export var attack_cooldown := 0.75
+@export var attack_cooldown := 1.2
 @export var attack_animation_speed_scale := 1.7
 var attack_cooldown_left := 0.0
 

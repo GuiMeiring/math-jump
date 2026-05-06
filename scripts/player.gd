@@ -40,6 +40,9 @@ enum PlayerState {
 @export var hurt_recovery_duration := 0.7
 @export var death_reload_delay := 0.9
 @export var fall_damage_min_distance := 220.0
+@export var enemy_contact_cooldown_duration := 1.0
+@export var enemy_contact_knockback_x := 140.0
+@export var enemy_contact_knockback_y := -120.0
 @export var enemy_top_bounce_velocity := -180.0
 @export var enemy_top_push_speed := 90.0
 @export var damage_flash_color := Color(1, 0.35, 0.35, 1)
@@ -67,6 +70,7 @@ var has_pending_death := false
 var is_damage_recovering := false
 var is_tracking_fall := false
 var fall_start_y := 0.0
+var enemy_contact_cooldown_left := 0.0
 
 var enemies_in_range: Array = []
 var active_attack_modal
@@ -80,6 +84,7 @@ func _ready() -> void:
 	is_damage_recovering = false
 	is_tracking_fall = false
 	fall_start_y = global_position.y
+	enemy_contact_cooldown_left = 0.0
 	lives_changed.connect(_on_lives_changed)
 	clear_damage_flash()
 	set_default_sprite_position()
@@ -89,6 +94,9 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
+
+	if enemy_contact_cooldown_left > 0.0:
+		enemy_contact_cooldown_left = max(enemy_contact_cooldown_left - delta, 0.0)
 
 	if can_attack() and Input.is_action_just_pressed("attack"):
 		try_attack()
@@ -112,6 +120,7 @@ func _physics_process(delta: float) -> void:
 		PlayerState.hurt:
 			hurt_state(delta)
 
+	process_enemy_contact_overlap_damage()
 	check_lethal_overlaps()
 
 	move_and_slide()
@@ -212,12 +221,50 @@ func resolve_enemy_body_collisions() -> void:
 		if collision.get_normal().dot(Vector2.UP) <= 0.7:
 			continue
 
-		take_damage()
+		try_take_enemy_contact_damage()
 		push_player_off_enemy(enemy)
 		return
 
 func is_enemy_body(node: Node) -> bool:
 	return node.has_method("is_attackable")
+
+func can_take_enemy_contact_damage() -> bool:
+	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_damage_recovering and enemy_contact_cooldown_left <= 0.0
+
+func try_take_enemy_contact_damage(enemy: Node2D = null) -> bool:
+	if not can_take_enemy_contact_damage():
+		return false
+
+	enemy_contact_cooldown_left = enemy_contact_cooldown_duration
+	apply_enemy_contact_knockback(enemy)
+	take_damage()
+	return true
+
+func apply_enemy_contact_knockback(enemy: Node2D = null) -> void:
+	var push_direction: float = -get_facing_direction()
+	if enemy != null:
+		push_direction = sign(global_position.x - enemy.global_position.x)
+		if push_direction == 0.0:
+			push_direction = -get_facing_direction()
+
+	velocity.x = push_direction * enemy_contact_knockback_x
+	velocity.y = enemy_contact_knockback_y
+	set_default_sprite_position()
+	if velocity.y < 0.0:
+		status = PlayerState.jump
+		anim.play("jump")
+	else:
+		status = PlayerState.fall
+		anim.play("fall")
+
+func process_enemy_contact_overlap_damage() -> void:
+	if not can_take_enemy_contact_damage():
+		return
+
+	for area in hit_box.get_overlapping_areas():
+		if area.is_in_group("enemies"):
+			try_take_enemy_contact_damage(area.get_parent() as Node2D)
+			return
 
 func push_player_off_enemy(enemy: Node2D) -> void:
 	var push_direction: float = sign(global_position.x - enemy.global_position.x)
@@ -391,12 +438,9 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		return
 
 	if area.is_in_group("enemies"):
-		hirt_enemy(area)
+		try_take_enemy_contact_damage(area.get_parent() as Node2D)
 	elif area.is_in_group("lethalArea") && not is_defending_against(area):
 		hit_lethal_area()
-
-func hirt_enemy(_area: Area2D):
-	take_damage()
 
 func hit_lethal_area():
 	take_damage()
