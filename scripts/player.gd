@@ -45,6 +45,8 @@ enum PlayerState {
 @export var enemy_contact_knockback_y := -120.0
 @export var enemy_top_bounce_velocity := -180.0
 @export var enemy_top_push_speed := 90.0
+@export var defense_push_speed := 85.0
+@export var defense_push_duration := 0.12
 @export var damage_flash_color := Color(1, 0.35, 0.35, 1)
 @export var default_player_color := Color(1, 1, 1, 1)
 const DEFAULT_SPRITE_POSITION := Vector2(0, -3.9)
@@ -71,6 +73,8 @@ var is_damage_recovering := false
 var is_tracking_fall := false
 var fall_start_y := 0.0
 var enemy_contact_cooldown_left := 0.0
+var defense_push_time_left := 0.0
+var defense_push_direction := 0.0
 
 var enemies_in_range: Array = []
 var active_attack_modal
@@ -85,6 +89,7 @@ func _ready() -> void:
 	is_tracking_fall = false
 	fall_start_y = global_position.y
 	enemy_contact_cooldown_left = 0.0
+	clear_defense_push()
 	lives_changed.connect(_on_lives_changed)
 	clear_damage_flash()
 	set_default_sprite_position()
@@ -97,6 +102,10 @@ func _physics_process(delta: float) -> void:
 
 	if enemy_contact_cooldown_left > 0.0:
 		enemy_contact_cooldown_left = max(enemy_contact_cooldown_left - delta, 0.0)
+	if defense_push_time_left > 0.0:
+		defense_push_time_left = max(defense_push_time_left - delta, 0.0)
+		if defense_push_time_left == 0.0:
+			defense_push_direction = 0.0
 
 	if can_attack() and Input.is_action_just_pressed("attack"):
 		try_attack()
@@ -162,6 +171,7 @@ func go_to_duck_state():
 	set_duck_collision(true)
 
 func exit_from_duck_state():
+	clear_defense_push()
 	set_duck_collision(false)
 
 func go_to_hurt_state():
@@ -347,7 +357,10 @@ func fall_state(delta):
 		return
 
 func duck_state(_delta):
-	velocity.x = 0
+	if defense_push_time_left > 0.0:
+		velocity.x = defense_push_direction * defense_push_speed
+	else:
+		velocity.x = 0
 	update_direction()
 	if Input.is_action_just_released("duck"):
 		exit_from_duck_state()
@@ -417,6 +430,15 @@ func is_defending_against(area: Area2D) -> bool:
 
 	return get_facing_direction() == -projectile_direction
 
+func apply_defense_push() -> void:
+	defense_push_direction = -get_facing_direction()
+	defense_push_time_left = defense_push_duration
+	velocity.x = defense_push_direction * defense_push_speed
+
+func clear_defense_push() -> void:
+	defense_push_time_left = 0.0
+	defense_push_direction = 0.0
+
 func set_duck_collision(is_ducking_state: bool):
 	collision_shape.shape.radius = 12
 	collision_shape.shape.height = DUCK_BODY_HEIGHT if is_ducking_state else STANDING_BODY_HEIGHT
@@ -439,8 +461,11 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 	if area.is_in_group("enemies"):
 		try_take_enemy_contact_damage(area.get_parent() as Node2D)
-	elif area.is_in_group("lethalArea") && not is_defending_against(area):
-		hit_lethal_area()
+	elif area.is_in_group("lethalArea"):
+		if is_defending_against(area):
+			apply_defense_push()
+		else:
+			hit_lethal_area()
 
 func hit_lethal_area():
 	take_damage()
@@ -464,6 +489,7 @@ func die() -> void:
 	has_pending_death = false
 	is_damage_recovering = false
 	stop_fall_tracking()
+	clear_defense_push()
 	clear_damage_flash()
 	exit_from_duck_state()
 	clear_pending_attack()
