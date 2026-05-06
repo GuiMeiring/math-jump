@@ -81,10 +81,13 @@ func go_to_hurt_state():
 	status = SkeletonState.hurt
 	anim.play("hurt")
 	hit_box.process_mode = Node.PROCESS_MODE_DISABLED
+	hit_box.set_deferred("monitoring", false)
+	hit_box.set_deferred("monitorable", false)
 	wall_detector.enabled = false
 	ground_detector.enabled = false
 	player_detector.enabled = false
 	collision_layer = 0
+	collision_mask = 1
 	velocity = Vector2.ZERO
 	
 func walk_state(_delta):
