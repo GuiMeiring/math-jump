@@ -7,6 +7,7 @@ enum SkeletonState {
 }
 
 const SPINNING_BONE = preload("res://entities/spinning_bone.tscn")
+const DEFAULT_ANIMATION_SPEED_SCALE := 1.0
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -22,7 +23,8 @@ var status: SkeletonState
 
 var direction = 1
 var can_throw = true
-@export var attack_cooldown := 0.6
+@export var attack_cooldown := 0.75
+@export var attack_animation_speed_scale := 1.7
 var attack_cooldown_left := 0.0
 
 var math_system = MathSystem.new()
@@ -59,6 +61,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func go_to_walk_state():
+	anim.speed_scale = DEFAULT_ANIMATION_SPEED_SCALE
 	status = SkeletonState.walk
 	anim.play("walk")
 	
@@ -66,6 +69,7 @@ func go_to_attack_state():
 	if attack_cooldown_left > 0.0:
 		return
 	
+	anim.speed_scale = attack_animation_speed_scale
 	status = SkeletonState.attack
 	anim.play("attack")
 	velocity = Vector2.ZERO
@@ -73,6 +77,7 @@ func go_to_attack_state():
 	attack_cooldown_left = attack_cooldown
 	
 func go_to_hurt_state():
+	anim.speed_scale = DEFAULT_ANIMATION_SPEED_SCALE
 	status = SkeletonState.hurt
 	anim.play("hurt")
 	hit_box.process_mode = Node.PROCESS_MODE_DISABLED
