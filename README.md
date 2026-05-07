@@ -32,11 +32,8 @@ O objetivo do jogo é transformar o aprendizado de matemática em uma experiênc
 ### Clonando o repositório
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd math-jump
+git clone https://github.com/GuiMeiring/math-jump.git
 ```
-
-Substitua `<URL_DO_REPOSITORIO>` pela URL real do repositório no GitHub.
 
 ## Como Configurar e Rodar o Game
 
