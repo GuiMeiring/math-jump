@@ -1,179 +1,359 @@
 # Math Jump
 
-Math Jump é um jogo sério de matemática feito em Godot.
+## Descrição do Game
 
-A proposta do projeto é misturar plataforma vertical com desafios matemáticos: o player sobe pelas fases, enfrenta inimigos e, no desenho final do jogo, derrota ameaças a partir de cálculos e respostas corretas.
+Math Jump é um jogo sério de matemática desenvolvido em Godot. A proposta mistura plataforma vertical com desafios matemáticos: o jogador sobe pelo cenário, enfrenta inimigos e progride ao interagir com sistemas de combate, defesa e resolução de cálculos.
 
-## Visão Geral
+## Objetivo do Game
 
-O projeto foi pensado para evoluir para:
+O objetivo do jogo é transformar o aprendizado de matemática em uma experiência interativa. Durante a progressão, o jogador deve:
+
+- subir pelas fases e plataformas do cenário
+- enfrentar inimigos ao longo do percurso
+- responder cálculos matemáticos para atacar corretamente
+- sobreviver usando vidas, defesa e movimentação
+- avançar até novos mapas, operações matemáticas e boss final
+
+## Equipe Responsável
+
+- Johnatan Vargas da Fonseca
+- Iago Henrique Pinto Bogler
+- Guilherme Franciel Meiring
+- Marceu Lago Pontes Schmidt
+- Cleberson Luis Vieira Martins Maia
+
+## Como Baixar o Projeto
+
+### Pré-requisitos
+
+- Git instalado na máquina
+- Godot 4.6 ou versão compatível com o projeto
+
+### Clonando o repositório
+
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd math-jump
+```
+
+Substitua `<URL_DO_REPOSITORIO>` pela URL real do repositório no GitHub.
+
+## Como Configurar e Rodar o Game
+
+### Passo a passo pelo editor Godot
+
+1. Abra a Godot Engine.
+2. Clique em `Import`.
+3. Selecione o arquivo `project.godot` na raiz do projeto.
+4. Aguarde a importação dos arquivos.
+5. Abra o projeto importado.
+6. Rode o jogo pela cena principal configurada no projeto.
+
+### Cena principal atual
+
+- `scene/tropic.tscn`
+
+### Execução por linha de comando
+
+Se você tiver o executável da Godot configurado no sistema, também pode rodar com:
+
+```bash
+godot4 --path .
+```
+
+## Controles do Player
+
+- `A` ou seta para a esquerda: mover para a esquerda
+- `D` ou seta para a direita: mover para a direita
+- `W` ou seta para cima: pular
+- `S` ou seta para baixo: abaixar / defender
+- `J` ou `Espaço`: atacar
+- `I`: interagir
+- `O`: avançar diálogo
+
+## Mecânicas Atuais do Game
+
+Atualmente o projeto já possui os seguintes sistemas jogáveis:
+
+- movimentação lateral do player
+- pulo e pulo duplo
+- máquina de estados do player
+- ataque corpo a corpo com validação por resposta matemática
+- modal de ataque com tempo limite
+- defesa contra projéteis quando o player está abaixado e virado para o lado correto
+- sistema de vidas com exibição em corações
+- dano por contato com inimigos
+- dano por projétil
+- dano por queda alta
+- recuperação temporária após sofrer dano
+- recarregamento da cena ao morrer
+- inimigo `Skeleton` com patrulha, detecção do player, ataque e estado de dano
+- projétil `SpinningBone`
+- sistema de diálogo para placa/interação
+- balão com expressão matemática acima dos inimigos
+- geração de perguntas matemáticas com alternativas
+
+## Sistema de Matemática
+
+O fluxo matemático atual funciona assim:
+
+- cada inimigo gera ou recupera uma pergunta matemática
+- a operação do inimigo é configurável por `operation_type`
+- quando o player tenta atacar um inimigo válido, o jogo abre um modal
+- o modal exibe a pergunta, três alternativas e um tempo limite
+- se o jogador acertar, o inimigo recebe dano
+- se errar ou o tempo acabar, o player sofre dano
+
+Operações já presentes no código:
 
 - multiplicação
 - divisão
-- fatorial
 - raiz
-- potenciação
-- quatro cenários ao longo da subida
-- boss final no fim do percurso
+- potência
+- fatorial
 
-Hoje, o projeto já possui uma base jogável com:
+### Mini Diagrama do Fluxo de Ataque Matemático
 
-- player controlável com movimento, pulo, defesa e estado de dano
-- inimigo `Skeleton` com patrulha, ataque e morte
-- projétil `SpinningBone`
-- caixa de diálogo da placa
-- geração de perguntas matemáticas
-- balão de cálculo exibido acima dos inimigos
+```mermaid
+flowchart TD
+    A[Player pressiona ataque] --> B{Existe inimigo válido em alcance?}
+    B -- Não --> C[Executa animação de ataque comum]
+    B -- Sim --> D[Player coleta question e options do inimigo]
+    D --> E[Math Attack Modal abre]
+    E --> F{Resposta correta?}
+    E --> G{Tempo esgotado?}
+    G -- Sim --> H[Player sofre dano]
+    G -- Não --> F
+    F -- Não --> H
+    F -- Sim --> I[Player entra em estado de attack]
+    I --> J[Animação de ataque termina]
+    J --> K[enemy.take_damage]
+    K --> L[Skeleton entra em hurt e remove balloon]
+```
 
-## Tecnologias
+Esse fluxo está distribuído principalmente entre:
 
-- Godot 4
-- GDScript
+- `scripts/player.gd`
+- `scripts/math_attack_modal.gd`
+- `scripts/skeleton.gd`
+- `scripts/dialog_manager.gd`
 
-## Cena Principal
+## Mapas e Fases
 
-- Cena inicial: `scene/tropic.tscn`
-- Projeto: `project.godot`
+### Cena principal jogável
 
-## Controles Atuais
+- `scene/tropic.tscn`
+  - fase atual usada como cena principal do projeto
+  - possui player, câmera, cenário com parallax, inimigos `Skeleton` e placa de diálogo
 
-- `A` / seta esquerda: mover para a esquerda
-- `D` / seta direita: mover para a direita
-- `W` / seta para cima: pular
-- `S` / seta para baixo: defender / abaixar
-- `J` ou `Espaço`: atacar
-- `I`: interagir com a placa
-- `O`: avançar diálogo
-
-## Arquitetura Atual
+## Fluxo dos Sistemas e Scripts
 
 ### Player
 
-O player está centralizado em `scripts/player.gd` e usa uma máquina de estados simples:
-
-- `idle`
-- `walk`
-- `jump`
-- `fall`
-- `duck`
-- `hurt`
-
-Responsabilidades atuais do player:
-
-- movimento horizontal
-- pulo e pulo duplo
-- defesa contra projétil
-- detecção de dano
-- ataque corpo a corpo
-- reinício da cena ao morrer
-
-### Inimigo Skeleton
-
-O `Skeleton` está em `scripts/skeleton.gd` e representa o inimigo principal atual.
+Arquivo principal: `scripts/player.gd`
 
 Responsabilidades atuais:
 
-- patrulha com raycasts
-- detecção do player
-- ataque com osso arremessado
-- estado de dano / morte
-- exibição do cálculo associado ao inimigo
+- ler input de movimento, pulo, defesa, ataque e interação
+- controlar estados como `idle`, `walk`, `jump`, `fall`, `duck`, `attack` e `hurt`
+- aplicar dano, invulnerabilidade temporária e morte
+- abrir o modal de ataque matemático ao atacar inimigos
+- atualizar os corações de vida na interface
 
-Estados atuais:
+Fluxo resumido:
 
-- `walk`
-- `attack`
-- `hurt`
+- recebe input
+- muda de estado
+- move o personagem
+- detecta colisões e áreas perigosas
+- tenta atacar inimigos em alcance
+- valida a resposta matemática antes de aplicar dano no alvo
 
-### Sistema de Perguntas
+#### Diagrama do Fluxo do Player
 
-O sistema matemático está dividido hoje em duas partes principais:
+```mermaid
+flowchart TD
+    A[Player recebe input] --> B{Qual ação foi executada?}
+    B -- Mover --> C[Atualiza direção e velocidade]
+    B -- Pular --> D[Entra em jump ou fall]
+    B -- Defender --> E[Entra em duck]
+    B -- Atacar --> F[Tenta atacar inimigo em alcance]
+    C --> G[Move and slide]
+    D --> G
+    E --> G
+    F --> G
+    G --> H{Colidiu com perigo ou inimigo?}
+    H -- Sim --> I[Aplica dano ou defesa]
+    H -- Não --> J[Continua no estado atual]
+    I --> K{Ainda tem vidas?}
+    K -- Sim --> J
+    K -- Não --> L[Reload da cena]
+```
 
-- `scripts/math_system.gd`: gera pergunta, resposta correta e opções
-- `scripts/dialog_manager.gd`: controla balão e persistência temporária do estado das perguntas por inimigo
+### Enemy Skeleton
 
-Situação atual da arquitetura:
+Arquivo principal: `scripts/skeleton.gd`
 
-- a lógica matemática já existe como sistema separado
-- o `Skeleton` ainda consome esse sistema diretamente
-- a UI da pergunta ainda não está totalmente separada do fluxo de combate
+Responsabilidades atuais:
 
-Isso está alinhado parcialmente com a arquitetura esperada, mas ainda há espaço para evoluir para um controlador próprio de encontros matemáticos.
+- patrulhar a plataforma
+- inverter direção ao detectar parede ou falta de chão
+- detectar o player
+- entrar em estado de ataque
+- lançar o projétil `SpinningBone`
+- carregar uma pergunta matemática própria
+- exibir um balão com a expressão do inimigo
 
-### Diálogos e UI
+Fluxo resumido:
+
+- inicia em `walk`
+- patrulha o cenário
+- detecta o player com raycast
+- entra em `attack`
+- arremessa um osso
+- volta a patrulhar
+- ao receber dano, entra em `hurt`
+
+#### Diagrama do Fluxo do Skeleton
+
+```mermaid
+flowchart TD
+    A[Skeleton inicia] --> B[Carrega estado matemático]
+    B --> C[Cria math balloon]
+    C --> D[Entra em walk]
+    D --> E{Há parede ou falta chão?}
+    E -- Sim --> F[Inverte direção]
+    E -- Não --> G[Continua patrulha]
+    F --> G
+    G --> H{Detectou player?}
+    H -- Não --> D
+    H -- Sim --> I[Entra em attack]
+    I --> J[Executa animação]
+    J --> K[Lança SpinningBone]
+    K --> L[Fim da animação]
+    L --> D
+    M[Recebe take_damage] --> N[Entra em hurt]
+    N --> O[Remove balloon e desativa colisões]
+```
+
+### Spinning Bone
+
+Arquivo principal: `scripts/spinning_bone.gd`
+
+Responsabilidades atuais:
+
+- mover o projétil horizontalmente
+- respeitar a direção lançada pelo inimigo
+- ser destruído por tempo, colisão com área ou colisão com corpo
+
+Fluxo resumido:
+
+- é instanciado pelo `Skeleton`
+- recebe direção
+- avança em linha reta
+- desaparece ao colidir ou ao fim do timer
+
+### Math Balloon
 
 Arquivos principais:
 
-- `scripts/dialog_manager.gd`
+- `scripts/math_balloon.gd`
 - `scripts/math_question_box.gd`
-- `scripts/warning_sign.gd`
 
-Funções atuais:
+Responsabilidades atuais:
 
-- abrir diálogo da placa
-- avançar falas por input
-- criar balão de cálculo para inimigos
+- mostrar o cálculo associado ao inimigo
+- acompanhar a posição do alvo
+- remover o balão quando o alvo deixa de existir
+- exibir texto com efeito progressivo de letras
 
-### Câmera
+Fluxo resumido:
 
-- `scripts/camera.gd`
+- o `Skeleton` pede ao `DialogManager` para criar o balão
+- o balão fica preso visualmente ao inimigo
+- o texto da pergunta é exibido acima do alvo
 
-A câmera segue o primeiro node do grupo `player`.
+### Math Attack Modal
 
-## Estrutura de Pastas
+Arquivo principal: `scripts/math_attack_modal.gd`
+
+Responsabilidades atuais:
+
+- abrir a interface de resposta do ataque matemático
+- pausar temporariamente a árvore do jogo
+- exibir alternativas
+- controlar navegação por teclado
+- controlar o tempo da resposta
+- devolver resultado de acerto, erro ou tempo esgotado
+
+Fluxo resumido:
+
+- o player tenta atacar
+- o modal abre com pergunta e opções
+- o jogador escolhe uma resposta
+- o modal informa o resultado ao player
+- o jogo retoma a execução normal
+
+### Dialog Manager
+
+Arquivo principal: `scripts/dialog_manager.gd`
+
+Responsabilidades atuais:
+
+- controlar mensagens de diálogo em sequência
+- criar caixas de texto na interface
+- criar balões matemáticos para inimigos
+- persistir o estado das perguntas por inimigo durante a cena
+
+Fluxo resumido:
+
+- recebe pedido de diálogo ou balão
+- instancia a caixa de texto
+- controla avanço de mensagem
+- armazena estado matemático por identificador do inimigo
+
+### Warning Sign
+
+Arquivo principal: `scripts/warning_sign.gd`
+
+Responsabilidades atuais:
+
+- detectar quando o player pode interagir
+- mostrar indicador visual de interação
+- iniciar o diálogo da placa
+
+### Camera
+
+Arquivo principal: `scripts/camera.gd`
+
+Responsabilidades atuais:
+
+- localizar o player pelo grupo `player`
+- seguir continuamente a posição do personagem
+
+### Math System
+
+Arquivo principal: `scripts/math_system.gd`
+
+Responsabilidades atuais:
+
+- gerar perguntas matemáticas
+- calcular a resposta correta
+- gerar alternativas erradas válidas
+
+## Estrutura Básica do Projeto
 
 ```text
 math-jump/
-|- entities/      # cenas reutilizáveis de player, inimigos, câmera e UI
-|- scene/         # fases do jogo
-|- scripts/       # scripts GDScript principais
-|- singletons/    # arquivos antigos / auxiliares
-|- sprites/       # arte, fontes e efeitos
-|- tiles/         # tilesets
-|- project.godot  # configuração do projeto
+|- entities/     # cenas reutilizáveis do jogo
+|- scene/        # mapas e fases
+|- scripts/      # scripts principais em GDScript
+|- singletons/   # arquivos auxiliares
+|- sprites/      # artes, UI e efeitos
+|- tiles/        # tilesets e terreno
+|- project.godot # configuração do projeto
 ```
 
-## Arquivos Principais
+## Licença
 
-- `scripts/player.gd`: controle do player
-- `scripts/skeleton.gd`: IA e comportamento do inimigo skeleton
-- `scripts/spinning_bone.gd`: comportamento do projétil
-- `scripts/math_system.gd`: geração das operações matemáticas
-- `scripts/dialog_manager.gd`: diálogos e balões
-- `scripts/warning_sign.gd`: interação com a placa
-- `entities/player.tscn`: cena do player
-- `entities/skeleton.tscn`: cena do skeleton
-- `scene/tropic.tscn`: fase principal atual
-
-
-## Convenção de Commits
-
-Exemplos de mensagens:
-
-- `feat: add math question system`
-- `fix: correct enemy attack collision`
-- `refactor: improve player state machine`
-- `feat: add boss final behavior`
-
-## Estado Atual do Projeto
-
-O projeto está em fase de base / protótipo jogável.
-
-Já existe:
-
-- locomoção do player
-- combate básico
-- inimigo funcional
-- projétil
-- diálogo de placa
-- sistema inicial de cálculos
-
-Ainda são passos naturais de evolução:
-
-- separar melhor o sistema de perguntas do inimigo
-- criar fluxo completo de responder pergunta e validar resultado
-- adicionar mais inimigos e cenários
-- introduzir progressão vertical mais completa
-- implementar boss final
-- sistema de ataque do player
-
+Este projeto está licenciado sob a MIT License.
