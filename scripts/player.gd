@@ -40,6 +40,8 @@ enum PlayerState {
 @export var hurt_recovery_duration := 0.7
 @export var death_reload_delay := 0.9
 @export var fall_damage_min_distance := 220.0
+@export var fall_damage_two_hearts_min_distance := 320.0
+@export var fall_damage_three_hearts_min_distance := 520.0
 @export var enemy_contact_cooldown_duration := 1.0
 @export var enemy_contact_knockback_x := 140.0
 @export var enemy_contact_knockback_y := -120.0
@@ -216,10 +218,23 @@ func process_fall_landing(was_on_floor: bool) -> void:
 
 	var fall_distance: float = max(global_position.y - fall_start_y, 0.0)
 	stop_fall_tracking()
-	if fall_damage_min_distance <= 0.0 or fall_distance < fall_damage_min_distance:
+	var fall_damage: int = get_fall_damage_amount(fall_distance)
+	if fall_damage <= 0:
 		return
 
-	take_damage()
+	take_damage(fall_damage)
+
+func get_fall_damage_amount(fall_distance: float) -> int:
+	if fall_damage_min_distance <= 0.0 or fall_distance < fall_damage_min_distance:
+		return 0
+
+	if fall_damage_three_hearts_min_distance > 0.0 and fall_distance >= fall_damage_three_hearts_min_distance:
+		return 3
+
+	if fall_damage_two_hearts_min_distance > 0.0 and fall_distance >= fall_damage_two_hearts_min_distance:
+		return 2
+
+	return 1
 
 func resolve_enemy_body_collisions() -> void:
 	for collision_index in get_slide_collision_count():
@@ -470,11 +485,14 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 func hit_lethal_area():
 	take_damage()
 
-func take_damage() -> void:
+func take_damage(amount: int = 1) -> void:
 	if is_dead or status == PlayerState.hurt or is_damage_recovering:
 		return
 
-	current_lives = max(current_lives - 1, 0)
+	if amount <= 0:
+		return
+
+	current_lives = max(current_lives - amount, 0)
 	has_pending_death = current_lives <= 0
 	lives_changed.emit(current_lives, max_lives)
 
