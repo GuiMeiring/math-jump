@@ -32,11 +32,8 @@ O objetivo do jogo é transformar o aprendizado de matemática em uma experiênc
 ### Clonando o repositório
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd math-jump
+git clone https://github.com/GuiMeiring/math-jump.git
 ```
-
-Substitua `<URL_DO_REPOSITORIO>` pela URL real do repositório no GitHub.
 
 ## Como Configurar e Rodar o Game
 
@@ -357,18 +354,3 @@ math-jump/
 ## Licença
 
 Este projeto está licenciado sob a MIT License.
-
-```text
-MIT License
-
-Copyright (c) 2026 Guilherme Meiring
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-```
-
-Para o texto completo da licença, consulte o arquivo `LICENSE`.
