@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://cgn2gxedt0deu"]
+
+[ext_resource type="Script" uid="uid://hlyjih1821vf" path="res://scripts/main_menu.gd" id="1_main_menu"]
+
+[node name="MainMenu" type="Control" unique_id=932312715]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_menu")
+
+[node name="PreviewRoot" type="Node2D" parent="." unique_id=439378627]
+
+[node name="UiLayer" type="CanvasLayer" parent="." unique_id=1309411697]
+layer = 10
+
+[node name="MainUi" type="Control" parent="UiLayer" unique_id=1692580207]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HudDecor" type="Node2D" parent="UiLayer/MainUi" unique_id=1328133886]
+
+[node name="TitleCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=758240112]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 6.0
+offset_right = 352.0
+offset_bottom = 88.0
+
+[node name="TitleContainer" type="VBoxContainer" parent="UiLayer/MainUi/TitleCenter" unique_id=1634307608]
+layout_mode = 2
+theme_override_constants/separation = -6
+alignment = 1
+
+[node name="TitleMath" type="Label" parent="UiLayer/MainUi/TitleCenter/TitleContainer" unique_id=2015071116]
+layout_mode = 2
+text = "MATH"
+horizontal_alignment = 1
+
+[node name="TitleJump" type="Label" parent="UiLayer/MainUi/TitleCenter/TitleContainer" unique_id=1316246903]
+layout_mode = 2
+text = "JUMP"
+horizontal_alignment = 1
+
+[node name="MenuButtonsCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=1338158074]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 88.0
+offset_right = 310.0
+offset_bottom = 176.0
+
+[node name="MenuButtons" type="VBoxContainer" parent="UiLayer/MainUi/MenuButtonsCenter" unique_id=2059830902]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="StartButton" type="Button" parent="UiLayer/MainUi/MenuButtonsCenter/MenuButtons" unique_id=1909706881]
+layout_mode = 2
+
+[node name="ControlsButton" type="Button" parent="UiLayer/MainUi/MenuButtonsCenter/MenuButtons" unique_id=978501494]
+layout_mode = 2
+
+[node name="ControlsCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=356826363]
+visible = false
+layout_mode = 0
+offset_left = 24.0
+offset_top = 18.0
+offset_right = 376.0
+offset_bottom = 190.0
+
+[node name="ControlsPanel" type="PanelContainer" parent="UiLayer/MainUi/ControlsCenter" unique_id=675105500]
+layout_mode = 2
+
+[node name="PanelMargin" type="MarginContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel" unique_id=1175724393]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="PanelContent" type="VBoxContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin" unique_id=902478688]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderCenter" type="CenterContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent" unique_id=1646778203]
+layout_mode = 2
+
+[node name="HeaderPanel" type="PanelContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/HeaderCenter" unique_id=565632378]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/HeaderCenter/HeaderPanel" unique_id=700818676]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="ControlsTitle" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/HeaderCenter/HeaderPanel/HeaderMargin" unique_id=1130060021]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ControlsGrid" type="GridContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent" unique_id=1056699784]
+layout_mode = 2
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="LeftKeysValue" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=1339846296]
+layout_mode = 2
+
+[node name="LeftActionLabel" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=883843098]
+layout_mode = 2
+text = "Esquerda"
+
+[node name="RightKeysValue" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=1174368358]
+layout_mode = 2
+
+[node name="RightActionLabel" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=50060694]
+layout_mode = 2
+text = "Direita"
+
+[node name="JumpKeysValue" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=1716935640]
+layout_mode = 2
+
+[node name="JumpActionLabel" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=236005793]
+layout_mode = 2
+text = "Pular"
+
+[node name="AttackKeysValue" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=6397046]
+layout_mode = 2
+
+[node name="AttackActionLabel" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=1340871225]
+layout_mode = 2
+text = "Atacar"
+
+[node name="BackKeysValue" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=544885523]
+layout_mode = 2
+
+[node name="BackActionLabel" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid" unique_id=1425635292]
+layout_mode = 2
+text = "Voltar"
+
+[node name="ControlsHint" type="Label" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent" unique_id=1000665325]
+layout_mode = 2
+horizontal_alignment = 1
