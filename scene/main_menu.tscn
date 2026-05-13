@@ -11,7 +11,21 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_menu")
 
-[node name="PreviewRoot" type="Node2D" parent="." unique_id=439378627]
+[node name="PreviewContainer" type="SubViewportContainer" parent="." unique_id=439378627]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="PreviewContainer" unique_id=1216249328]
+disable_3d = true
+handle_input_locally = false
+render_target_update_mode = 4
+size = Vector2i(400, 208)
 
 [node name="UiLayer" type="CanvasLayer" parent="." unique_id=1309411697]
 layer = 10
@@ -23,8 +37,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="HudDecor" type="Node2D" parent="UiLayer/MainUi" unique_id=1328133886]
 
 [node name="TitleCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=758240112]
 layout_mode = 0

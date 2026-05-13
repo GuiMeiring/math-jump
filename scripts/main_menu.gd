@@ -2,12 +2,9 @@ extends Control
 
 const GAME_SCENE_PATH := "res://scene/tropic.tscn"
 const PREVIEW_SCENE := preload("res://scene/tropic.tscn")
-const PLAYER_IDLE_TEXTURE := preload("res://sprites/Sprite Pack 7/3 - Gordon/Idle (48 x 48).png")
-const SKELETON_WALK_TEXTURE := preload("res://sprites/Sprite Pack 6/3 - Skeleton/Limping_Movement (32 x 32).png")
-const HEART_TEXTURE := preload("res://sprites/Mini FX, Items & UI/Common Pick-ups/Heart_Spin (16 x 16).png")
 const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
 
-@onready var preview_root: Node2D = $PreviewRoot
+@onready var preview_viewport: SubViewport = $PreviewContainer/PreviewViewport
 @onready var title_center: CenterContainer = $UiLayer/MainUi/TitleCenter
 @onready var title_math: Label = $UiLayer/MainUi/TitleCenter/TitleContainer/TitleMath
 @onready var title_jump: Label = $UiLayer/MainUi/TitleCenter/TitleContainer/TitleJump
@@ -23,15 +20,14 @@ const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
 @onready var attack_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/AttackKeysValue
 @onready var back_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/BackKeysValue
 @onready var controls_hint: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsHint
-@onready var hud_decor: Node2D = $UiLayer/MainUi/HudDecor
 
 func _ready() -> void:
-	_build_static_preview()
 	_setup_ui()
 	_populate_controls()
 	_show_main_menu()
 	start_button.pressed.connect(_on_start_button_pressed)
 	controls_button.pressed.connect(_on_controls_button_pressed)
+	_build_static_preview()
 	start_button.grab_focus()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -48,14 +44,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _build_static_preview() -> void:
+	DialogManager.balloons_enabled = false
 	var preview_scene: Node2D = PREVIEW_SCENE.instantiate()
+	preview_viewport.add_child(preview_scene)
+	await get_tree().process_frame
+	await get_tree().process_frame
 
-	for node_name in ["Camera", "Player", "Skeleton", "Skeleton2", "warning_sign"]:
-		var node := preview_scene.get_node_or_null(node_name)
-		if node != null:
-			node.free()
-
-	preview_root.add_child(preview_scene)
+	var preview_camera := preview_scene.get_node_or_null("Camera") as Camera2D
+	if preview_camera != null:
+		preview_camera.position_smoothing_enabled = false
 
 	for water_path in ["Parallax/2 - Waters/AnimatedSprite2D", "Parallax/2 - Waters/AnimatedSprite2D2"]:
 		var water := preview_scene.get_node_or_null(water_path) as AnimatedSprite2D
@@ -63,35 +60,9 @@ func _build_static_preview() -> void:
 			continue
 
 		water.stop()
-		water.frame = 0
-
-	_add_preview_player()
-	_add_preview_skeleton()
-	_add_preview_hearts()
-
-func _add_preview_player() -> void:
-	var player_sprite := Sprite2D.new()
-	player_sprite.texture = _make_atlas_texture(PLAYER_IDLE_TEXTURE, Rect2(48, 0, 48, 48))
-	player_sprite.position = Vector2(98, 160)
-	player_sprite.scale = Vector2(1.45, 1.45)
-	player_sprite.z_index = 4
-	preview_root.add_child(player_sprite)
-
-func _add_preview_skeleton() -> void:
-	var skeleton_sprite := Sprite2D.new()
-	skeleton_sprite.texture = _make_atlas_texture(SKELETON_WALK_TEXTURE, Rect2(64, 0, 32, 32))
-	skeleton_sprite.position = Vector2(332, 163)
-	skeleton_sprite.scale = Vector2(-1.5, 1.5)
-	skeleton_sprite.z_index = 4
-	preview_root.add_child(skeleton_sprite)
-
-func _add_preview_hearts() -> void:
-	for heart_index in range(3):
-		var heart_sprite := Sprite2D.new()
-		heart_sprite.texture = _make_atlas_texture(HEART_TEXTURE, Rect2(0, 0, 16, 16))
-		heart_sprite.position = Vector2(24 + heart_index * 22, 18)
-		heart_sprite.scale = Vector2(1.45, 1.45)
-		hud_decor.add_child(heart_sprite)
+	preview_scene.process_mode = Node.PROCESS_MODE_DISABLED
+	preview_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	DialogManager.balloons_enabled = true
 
 func _setup_ui() -> void:
 	_style_title_label(title_math, Color(1.0, 0.81, 0.22), 36)
@@ -110,19 +81,27 @@ func _style_title_label(label: Label, font_color: Color, font_size: int) -> void
 
 func _style_main_button(button: Button, button_text: String, base_color: Color, hover_color: Color, pressed_color: Color) -> void:
 	button.text = button_text
-	button.custom_minimum_size = Vector2(172, 38)
+	button.custom_minimum_size = Vector2(144, 27)
 	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_override("font", MENU_FONT)
-	button.add_theme_font_size_override("font_size", 18)
+	button.add_theme_font_size_override("font_size", 13)
 	button.add_theme_color_override("font_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_hover_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_pressed_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_focus_color", Color(1, 1, 1))
-	button.add_theme_stylebox_override("normal", _make_panel_style(base_color, Color(0.12, 0.2, 0.16), 6, 12, 6))
-	button.add_theme_stylebox_override("hover", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 6, 12, 6))
-	button.add_theme_stylebox_override("pressed", _make_panel_style(pressed_color, Color(0.12, 0.2, 0.16), 6, 12, 6))
-	button.add_theme_stylebox_override("focus", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 6, 12, 6))
-	button.add_theme_stylebox_override("disabled", _make_panel_style(base_color.darkened(0.35), Color(0.12, 0.2, 0.16), 6, 12, 6))
+	button.add_theme_stylebox_override("normal", _make_panel_style(base_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_stylebox_override("hover", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_stylebox_override("pressed", _make_panel_style(pressed_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_stylebox_override("focus", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_stylebox_override("disabled", _make_panel_style(base_color.darkened(0.35), Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_constant_override("h_separation", 6)
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+
+	if button == start_button:
+		button.icon = _make_start_icon()
+	else:
+		button.icon = _make_controls_icon()
 
 func _style_controls_panel() -> void:
 	controls_panel.custom_minimum_size = Vector2(326, 154)
@@ -229,20 +208,51 @@ func _show_main_menu() -> void:
 	title_center.show()
 	buttons_center.show()
 	controls_center.hide()
-	hud_decor.show()
 	start_button.grab_focus()
 
 func _show_controls_menu() -> void:
 	title_center.hide()
 	buttons_center.hide()
 	controls_center.show()
-	hud_decor.hide()
 
-func _make_atlas_texture(texture: Texture2D, region: Rect2) -> AtlasTexture:
-	var atlas_texture := AtlasTexture.new()
-	atlas_texture.atlas = texture
-	atlas_texture.region = region
-	return atlas_texture
+func _make_start_icon() -> Texture2D:
+	var image := Image.create(12, 12, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var icon_color := Color(1, 1, 1, 1)
+
+	for y in range(2, 10):
+		for x in range(2, 10):
+			if x <= 2 + (y - 2):
+				image.set_pixel(x, y, icon_color)
+
+	return ImageTexture.create_from_image(image)
+
+func _make_controls_icon() -> Texture2D:
+	var image := Image.create(12, 12, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var icon_color := Color(1, 1, 1, 1)
+
+	for x in range(1, 11):
+		image.set_pixel(x, 1, icon_color)
+		image.set_pixel(x, 10, icon_color)
+
+	for y in range(1, 11):
+		image.set_pixel(1, y, icon_color)
+		image.set_pixel(10, y, icon_color)
+
+	for x in range(3, 5):
+		for y in range(3, 5):
+			image.set_pixel(x, y, icon_color)
+
+	for x in range(6, 8):
+		for y in range(3, 5):
+			image.set_pixel(x, y, icon_color)
+
+	for x in range(3, 9):
+		image.set_pixel(x, 7, icon_color)
+		image.set_pixel(x, 8, icon_color)
+
+	return ImageTexture.create_from_image(image)
 
 func _make_panel_style(
 	background_color: Color,
