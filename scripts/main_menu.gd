@@ -3,6 +3,16 @@ extends Control
 const GAME_SCENE_PATH := "res://scene/tropic.tscn"
 const PREVIEW_SCENE := preload("res://scene/tropic.tscn")
 const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
+const CONTROL_ENTRIES := [
+	{"action": &"left", "label": "Mover para a esquerda"},
+	{"action": &"right", "label": "Mover para a direita"},
+	{"action": &"jump", "label": "Pular"},
+	{"action": &"duck", "label": "Abaixar"},
+	{"action": &"attack", "label": "Atacar"},
+	{"action": &"interact", "label": "Interagir"},
+	{"action": &"advance_message", "label": "Avancar dialogo"},
+	{"keys_text": "ESC", "label": "Voltar"}
+]
 
 @onready var preview_viewport: SubViewport = $PreviewContainer/PreviewViewport
 @onready var title_center: CenterContainer = $UiLayer/MainUi/TitleCenter
@@ -11,15 +21,12 @@ const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
 @onready var buttons_center: CenterContainer = $UiLayer/MainUi/MenuButtonsCenter
 @onready var start_button: Button = $UiLayer/MainUi/MenuButtonsCenter/MenuButtons/StartButton
 @onready var controls_button: Button = $UiLayer/MainUi/MenuButtonsCenter/MenuButtons/ControlsButton
-@onready var controls_center: CenterContainer = $UiLayer/MainUi/ControlsCenter
+@onready var controls_center: Control = $UiLayer/MainUi/ControlsCenter
+@onready var controls_back_button: Button = $UiLayer/MainUi/ControlsCenter/BackButton
 @onready var controls_panel: PanelContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel
-@onready var controls_title: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/HeaderCenter/HeaderPanel/HeaderMargin/ControlsTitle
-@onready var left_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/LeftKeysValue
-@onready var right_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/RightKeysValue
-@onready var jump_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/JumpKeysValue
-@onready var attack_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/AttackKeysValue
-@onready var back_keys_value: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/BackKeysValue
-@onready var controls_hint: Label = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsHint
+@onready var controls_title: Label = $UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel/HeaderMargin/ControlsTitle
+@onready var controls_scroll: ScrollContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll
+@onready var controls_list: VBoxContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll/ControlsList
 
 func _ready() -> void:
 	_setup_ui()
@@ -27,6 +34,7 @@ func _ready() -> void:
 	_show_main_menu()
 	start_button.pressed.connect(_on_start_button_pressed)
 	controls_button.pressed.connect(_on_controls_button_pressed)
+	controls_back_button.pressed.connect(_on_controls_back_button_pressed)
 	_build_static_preview()
 	start_button.grab_focus()
 
@@ -69,8 +77,8 @@ func _setup_ui() -> void:
 	_style_title_label(title_jump, Color(0.96, 0.96, 0.96), 34)
 	_style_main_button(start_button, "START", Color(0.47, 0.82, 0.23), Color(0.56, 0.88, 0.29), Color(0.36, 0.69, 0.18))
 	_style_main_button(controls_button, "CONTROLES", Color(0.26, 0.54, 0.91), Color(0.33, 0.61, 0.96), Color(0.2, 0.43, 0.78))
+	_style_controls_header()
 	_style_controls_panel()
-	_style_controls_text()
 
 func _style_title_label(label: Label, font_color: Color, font_size: int) -> void:
 	label.add_theme_font_override("font", MENU_FONT)
@@ -103,60 +111,56 @@ func _style_main_button(button: Button, button_text: String, base_color: Color, 
 	else:
 		button.icon = _make_controls_icon()
 
-func _style_controls_panel() -> void:
-	controls_panel.custom_minimum_size = Vector2(326, 154)
-	controls_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.97, 0.93, 0.84), Color(0.35, 0.23, 0.18), 3, 12, 10))
+func _style_controls_header() -> void:
+	controls_back_button.text = ""
+	controls_back_button.custom_minimum_size = Vector2(30, 30)
+	controls_back_button.focus_mode = Control.FOCUS_ALL
+	controls_back_button.icon = _make_back_icon()
+	controls_back_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	controls_back_button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	controls_back_button.add_theme_stylebox_override("normal", _make_panel_style(Color(0.24, 0.56, 0.92), Color(0.12, 0.25, 0.49), 3, 6, 6))
+	controls_back_button.add_theme_stylebox_override("hover", _make_panel_style(Color(0.31, 0.63, 0.97), Color(0.12, 0.25, 0.49), 3, 6, 6))
+	controls_back_button.add_theme_stylebox_override("pressed", _make_panel_style(Color(0.19, 0.48, 0.83), Color(0.12, 0.25, 0.49), 3, 6, 6))
+	controls_back_button.add_theme_stylebox_override("focus", _make_panel_style(Color(0.31, 0.63, 0.97), Color(0.12, 0.25, 0.49), 3, 6, 6))
 
-	var header_panel := $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/HeaderCenter/HeaderPanel as PanelContainer
-	header_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.24, 0.44, 0.84), Color(0.13, 0.25, 0.5), 3, 14, 5))
+	var header_panel := $UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel as PanelContainer
+	header_panel.custom_minimum_size = Vector2(168, 30)
+	header_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.24, 0.56, 0.92), Color(0.12, 0.25, 0.49), 3, 18, 5))
 
 	controls_title.add_theme_font_override("font", MENU_FONT)
-	controls_title.add_theme_font_size_override("font_size", 15)
+	controls_title.add_theme_font_size_override("font_size", 12)
 	controls_title.add_theme_color_override("font_color", Color(1, 1, 1))
 	controls_title.add_theme_color_override("font_outline_color", Color(0.13, 0.19, 0.36))
-	controls_title.add_theme_constant_override("outline_size", 3)
-	controls_title.text = "TECLAS"
+	controls_title.add_theme_constant_override("outline_size", 2)
+	controls_title.text = "CONTROLES"
 
-func _style_controls_text() -> void:
-	var grid_labels := [
-		left_keys_value,
-		right_keys_value,
-		jump_keys_value,
-		attack_keys_value,
-		back_keys_value
-	]
+func _style_controls_panel() -> void:
+	controls_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.97, 0.93, 0.84), Color(0.35, 0.23, 0.18), 3, 12, 10))
+	controls_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	controls_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 
-	for label in grid_labels:
-		label.add_theme_font_override("font", MENU_FONT)
-		label.add_theme_font_size_override("font_size", 13)
-		label.add_theme_color_override("font_color", Color(0.18, 0.39, 0.76))
-
-	var action_labels := [
-		$UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/LeftActionLabel,
-		$UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/RightActionLabel,
-		$UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/JumpActionLabel,
-		$UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/AttackActionLabel,
-		$UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/PanelContent/ControlsGrid/BackActionLabel
-	]
-
-	for label in action_labels:
-		label.add_theme_font_override("font", MENU_FONT)
-		label.add_theme_font_size_override("font_size", 13)
-		label.add_theme_color_override("font_color", Color(0.19, 0.16, 0.23))
-
-	controls_hint.add_theme_font_override("font", MENU_FONT)
-	controls_hint.add_theme_font_size_override("font_size", 11)
-	controls_hint.add_theme_color_override("font_color", Color(0.24, 0.25, 0.34))
-	controls_hint.text = "Pressione ESC para voltar"
+	var v_scroll_bar := controls_scroll.get_v_scroll_bar()
+	v_scroll_bar.custom_minimum_size = Vector2(3, 0)
+	v_scroll_bar.add_theme_stylebox_override("scroll", _make_scrollbar_style(Color(0.78, 0.75, 0.69), 6))
+	v_scroll_bar.add_theme_stylebox_override("grabber", _make_scrollbar_style(Color(0.47, 0.45, 0.42), 6))
+	v_scroll_bar.add_theme_stylebox_override("grabber_highlight", _make_scrollbar_style(Color(0.41, 0.39, 0.36), 6))
+	v_scroll_bar.add_theme_stylebox_override("grabber_pressed", _make_scrollbar_style(Color(0.35, 0.33, 0.31), 6))
 
 func _populate_controls() -> void:
-	left_keys_value.text = _format_action_bindings("left")
-	right_keys_value.text = _format_action_bindings("right")
-	jump_keys_value.text = _format_action_bindings("jump")
-	attack_keys_value.text = _format_action_bindings("attack")
-	back_keys_value.text = "ESC"
+	for child in controls_list.get_children():
+		child.queue_free()
+
+	for entry in CONTROL_ENTRIES:
+		var keys_text: String = str(entry.get("keys_text", ""))
+		if keys_text.is_empty():
+			keys_text = _format_action_bindings(entry.get("action", &""))
+
+		controls_list.add_child(_create_control_row(keys_text, str(entry["label"])))
 
 func _format_action_bindings(action_name: StringName) -> String:
+	if action_name.is_empty() or not InputMap.has_action(action_name):
+		return "-"
+
 	var labels := PackedStringArray()
 
 	for event in InputMap.action_get_events(action_name):
@@ -194,15 +198,47 @@ func _keycode_to_label(keycode: Key) -> String:
 		KEY_RIGHT:
 			return "→"
 		KEY_UP:
-			return "↑"
+			return "Seta Cima"
 		KEY_DOWN:
-			return "↓"
+			return "Seta Baixo"
 		KEY_SPACE:
 			return "Espaco"
 		KEY_ESCAPE:
 			return "ESC"
 		_:
 			return str(keycode)
+
+func _create_control_row(keys_text: String, action_text: String) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.custom_minimum_size = Vector2(0, 14)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 4)
+
+	var keys_panel := PanelContainer.new()
+	keys_panel.custom_minimum_size = Vector2(68, 0)
+	keys_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.34, 0.58, 0.93), Color(0.12, 0.25, 0.49), 2, 5, 3))
+
+	var keys_label := Label.new()
+	keys_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	keys_label.add_theme_font_override("font", MENU_FONT)
+	keys_label.add_theme_font_size_override("font_size", 7)
+	keys_label.add_theme_color_override("font_color", Color(1, 1, 1))
+	keys_label.add_theme_color_override("font_outline_color", Color(0.13, 0.19, 0.36))
+	keys_label.add_theme_constant_override("outline_size", 1)
+	keys_label.text = keys_text
+	keys_panel.add_child(keys_label)
+
+	var action_label := Label.new()
+	action_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	action_label.add_theme_font_override("font", MENU_FONT)
+	action_label.add_theme_font_size_override("font_size", 7)
+	action_label.add_theme_color_override("font_color", Color(0.19, 0.16, 0.23))
+	action_label.text = action_text
+
+	row.add_child(keys_panel)
+	row.add_child(action_label)
+	return row
 
 func _show_main_menu() -> void:
 	title_center.show()
@@ -214,6 +250,8 @@ func _show_controls_menu() -> void:
 	title_center.hide()
 	buttons_center.hide()
 	controls_center.show()
+	controls_scroll.scroll_vertical = 0
+	controls_back_button.grab_focus()
 
 func _make_start_icon() -> Texture2D:
 	var image := Image.create(12, 12, false, Image.FORMAT_RGBA8)
@@ -254,6 +292,35 @@ func _make_controls_icon() -> Texture2D:
 
 	return ImageTexture.create_from_image(image)
 
+func _make_back_icon() -> Texture2D:
+	var image := Image.create(12, 12, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var icon_color := Color(1, 1, 1, 1)
+
+	for x in range(3, 10):
+		image.set_pixel(x, 5, icon_color)
+		image.set_pixel(x, 6, icon_color)
+
+	image.set_pixel(2, 5, icon_color)
+	image.set_pixel(2, 6, icon_color)
+	image.set_pixel(3, 4, icon_color)
+	image.set_pixel(3, 7, icon_color)
+	image.set_pixel(4, 3, icon_color)
+	image.set_pixel(4, 8, icon_color)
+	image.set_pixel(5, 2, icon_color)
+	image.set_pixel(5, 9, icon_color)
+
+	return ImageTexture.create_from_image(image)
+
+func _make_scrollbar_style(background_color: Color, corner_radius: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = background_color
+	style.corner_radius_top_left = corner_radius
+	style.corner_radius_top_right = corner_radius
+	style.corner_radius_bottom_right = corner_radius
+	style.corner_radius_bottom_left = corner_radius
+	return style
+
 func _make_panel_style(
 	background_color: Color,
 	border_color: Color,
@@ -283,3 +350,6 @@ func _on_start_button_pressed() -> void:
 
 func _on_controls_button_pressed() -> void:
 	_show_controls_menu()
+
+func _on_controls_back_button_pressed() -> void:
+	_show_main_menu()
