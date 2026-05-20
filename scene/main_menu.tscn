@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://cgn2gxedt0deu"]
+
+[ext_resource type="Script" uid="uid://hlyjih1821vf" path="res://scripts/main_menu.gd" id="1_main_menu"]
+
+[node name="MainMenu" type="Control" unique_id=932312715]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_menu")
+
+[node name="PreviewContainer" type="SubViewportContainer" parent="." unique_id=439378627]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="PreviewContainer" unique_id=1216249328]
+disable_3d = true
+handle_input_locally = false
+render_target_update_mode = 4
+size = Vector2i(400, 208)
+
+[node name="UiLayer" type="CanvasLayer" parent="." unique_id=1309411697]
+layer = 10
+
+[node name="MainUi" type="Control" parent="UiLayer" unique_id=1692580207]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=758240112]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 6.0
+offset_right = 352.0
+offset_bottom = 88.0
+
+[node name="TitleContainer" type="VBoxContainer" parent="UiLayer/MainUi/TitleCenter" unique_id=1634307608]
+layout_mode = 2
+theme_override_constants/separation = -6
+alignment = 1
+
+[node name="TitleMath" type="Label" parent="UiLayer/MainUi/TitleCenter/TitleContainer" unique_id=2015071116]
+layout_mode = 2
+text = "MATH"
+horizontal_alignment = 1
+
+[node name="TitleJump" type="Label" parent="UiLayer/MainUi/TitleCenter/TitleContainer" unique_id=1316246903]
+layout_mode = 2
+text = "JUMP"
+horizontal_alignment = 1
+
+[node name="MenuButtonsCenter" type="CenterContainer" parent="UiLayer/MainUi" unique_id=1338158074]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 88.0
+offset_right = 310.0
+offset_bottom = 176.0
+
+[node name="MenuButtons" type="VBoxContainer" parent="UiLayer/MainUi/MenuButtonsCenter" unique_id=2059830902]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="StartButton" type="Button" parent="UiLayer/MainUi/MenuButtonsCenter/MenuButtons" unique_id=1909706881]
+layout_mode = 2
+
+[node name="ControlsButton" type="Button" parent="UiLayer/MainUi/MenuButtonsCenter/MenuButtons" unique_id=978501494]
+layout_mode = 2
+
+[node name="ControlsCenter" type="Control" parent="UiLayer/MainUi" unique_id=356826363]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackButton" type="Button" parent="UiLayer/MainUi/ControlsCenter" unique_id=109623564]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 12.0
+offset_right = 62.0
+offset_bottom = 42.0
+
+[node name="HeaderCenter" type="CenterContainer" parent="UiLayer/MainUi/ControlsCenter" unique_id=1646778203]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 12.0
+offset_right = 300.0
+offset_bottom = 42.0
+
+[node name="HeaderPanel" type="PanelContainer" parent="UiLayer/MainUi/ControlsCenter/HeaderCenter" unique_id=565632378]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel" unique_id=700818676]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 4
+
+[node name="ControlsTitle" type="Label" parent="UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel/HeaderMargin" unique_id=1130060021]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ControlsPanel" type="PanelContainer" parent="UiLayer/MainUi/ControlsCenter" unique_id=675105500]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 368.0
+offset_bottom = 186.0
+
+[node name="PanelMargin" type="MarginContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel" unique_id=1175724393]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ControlsScroll" type="ScrollContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin" unique_id=171396245]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+
+[node name="ControlsList" type="GridContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll" unique_id=903218664]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8

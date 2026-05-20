@@ -11,6 +11,7 @@ var is_message_active := false
 var can_advance_message := false
 var balloons_by_owner := {}
 var math_state_by_owner := {}
+var balloons_enabled := true
 
 func start_message(position: Vector2, lines: Array[String]):
 	if is_message_active:
@@ -43,6 +44,9 @@ func _unhandled_input(event):
 		show_text()
 
 func show_balloon(target: Node2D, text: String, owner_id := ""):
+	if not balloons_enabled:
+		return null
+
 	if owner_id != "":
 		var previous_balloon = balloons_by_owner.get(owner_id)
 		if is_instance_valid(previous_balloon):
