@@ -3,6 +3,7 @@ extends Control
 const GAME_SCENE_PATH := "res://scene/tropic.tscn"
 const PREVIEW_SCENE := preload("res://scene/tropic.tscn")
 const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
+const CONTROLS_BORDER_COLOR := Color(0.12, 0.2, 0.16)
 const CONTROL_ENTRIES := [
 	{"action": &"left", "label": "Esquerda"},
 	{"action": &"right", "label": "Direita"},
@@ -26,19 +27,31 @@ const CONTROL_ENTRIES := [
 @onready var controls_panel: PanelContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel
 @onready var controls_title: Label = $UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel/HeaderMargin/ControlsTitle
 @onready var controls_scroll: ScrollContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll
-@onready var controls_list: VBoxContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll/ControlsList
+@onready var controls_list: GridContainer = $UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll/ControlsList
+
+var controls_back_button_hover_tween: Tween
 
 func _ready() -> void:
 	_setup_ui()
+	_setup_focus_navigation()
 	_populate_controls()
 	_show_main_menu()
+	_connect_main_menu_button_state_signals(start_button)
+	_connect_main_menu_button_state_signals(controls_button)
 	start_button.pressed.connect(_on_start_button_pressed)
 	controls_button.pressed.connect(_on_controls_button_pressed)
 	controls_back_button.pressed.connect(_on_controls_back_button_pressed)
+	controls_back_button.mouse_entered.connect(_on_controls_back_button_mouse_entered)
+	controls_back_button.mouse_exited.connect(_on_controls_back_button_mouse_exited)
 	_build_static_preview()
 	start_button.grab_focus()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if buttons_center.visible:
+		if _handle_main_menu_navigation_input(event):
+			get_viewport().set_input_as_handled()
+		return
+
 	if not controls_center.visible:
 		return
 
@@ -50,6 +63,33 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_show_main_menu()
 		get_viewport().set_input_as_handled()
+
+func _handle_main_menu_navigation_input(event: InputEvent) -> bool:
+	var key_event := event as InputEventKey
+	if key_event == null or not key_event.pressed or key_event.echo:
+		return false
+
+	match key_event.physical_keycode:
+		KEY_W:
+			_move_main_menu_focus(-1)
+			return true
+		KEY_S:
+			_move_main_menu_focus(1)
+			return true
+		_:
+			return false
+
+func _move_main_menu_focus(direction: int) -> void:
+	var menu_buttons: Array[Button] = [start_button, controls_button]
+	var current_index := 0
+
+	for index in range(menu_buttons.size()):
+		if menu_buttons[index].has_focus():
+			current_index = index
+			break
+
+	var next_index := posmod(current_index + direction, menu_buttons.size())
+	menu_buttons[next_index].grab_focus()
 
 func _build_static_preview() -> void:
 	DialogManager.balloons_enabled = false
@@ -75,10 +115,28 @@ func _build_static_preview() -> void:
 func _setup_ui() -> void:
 	_style_title_label(title_math, Color(1.0, 0.81, 0.22), 36)
 	_style_title_label(title_jump, Color(0.96, 0.96, 0.96), 34)
-	_style_main_button(start_button, "START", Color(0.47, 0.82, 0.23), Color(0.56, 0.88, 0.29), Color(0.36, 0.69, 0.18))
+	_style_main_button(start_button, "START", Color(0.47, 0.82, 0.23), Color(0.76, 0.95, 0.36), Color(0.36, 0.69, 0.18))
 	_style_main_button(controls_button, "CONTROLES", Color(0.26, 0.54, 0.91), Color(0.33, 0.61, 0.96), Color(0.2, 0.43, 0.78))
 	_style_controls_header()
 	_style_controls_panel()
+
+func _setup_focus_navigation() -> void:
+	start_button.focus_neighbor_bottom = start_button.get_path_to(controls_button)
+	start_button.focus_next = start_button.get_path_to(controls_button)
+	start_button.focus_neighbor_top = start_button.get_path_to(controls_button)
+	start_button.focus_previous = start_button.get_path_to(controls_button)
+
+	controls_button.focus_neighbor_top = controls_button.get_path_to(start_button)
+	controls_button.focus_previous = controls_button.get_path_to(start_button)
+	controls_button.focus_neighbor_bottom = controls_button.get_path_to(start_button)
+	controls_button.focus_next = controls_button.get_path_to(start_button)
+
+	controls_back_button.focus_neighbor_left = NodePath(".")
+	controls_back_button.focus_neighbor_right = NodePath(".")
+	controls_back_button.focus_neighbor_top = NodePath(".")
+	controls_back_button.focus_neighbor_bottom = NodePath(".")
+	controls_back_button.focus_next = NodePath(".")
+	controls_back_button.focus_previous = NodePath(".")
 
 func _style_title_label(label: Label, font_color: Color, font_size: int) -> void:
 	label.add_theme_font_override("font", MENU_FONT)
@@ -91,16 +149,17 @@ func _style_main_button(button: Button, button_text: String, base_color: Color, 
 	button.text = button_text
 	button.custom_minimum_size = Vector2(144, 27)
 	button.focus_mode = Control.FOCUS_ALL
+	button.pivot_offset = button.custom_minimum_size * 0.5
+	button.set_meta("base_color", base_color)
+	button.set_meta("hover_color", hover_color)
+	button.set_meta("pressed_color", pressed_color)
 	button.add_theme_font_override("font", MENU_FONT)
 	button.add_theme_font_size_override("font_size", 13)
 	button.add_theme_color_override("font_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_hover_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_pressed_color", Color(1, 1, 1))
 	button.add_theme_color_override("font_focus_color", Color(1, 1, 1))
-	button.add_theme_stylebox_override("normal", _make_panel_style(base_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
-	button.add_theme_stylebox_override("hover", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
-	button.add_theme_stylebox_override("pressed", _make_panel_style(pressed_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
-	button.add_theme_stylebox_override("focus", _make_panel_style(hover_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	_refresh_main_menu_button_visual(button)
 	button.add_theme_stylebox_override("disabled", _make_panel_style(base_color.darkened(0.35), Color(0.12, 0.2, 0.16), 2, 8, 3))
 	button.add_theme_constant_override("h_separation", 6)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -111,21 +170,46 @@ func _style_main_button(button: Button, button_text: String, base_color: Color, 
 	else:
 		button.icon = _make_controls_icon()
 
+func _connect_main_menu_button_state_signals(button: Button) -> void:
+	button.mouse_entered.connect(_on_main_menu_button_mouse_entered.bind(button))
+	button.mouse_exited.connect(_on_main_menu_button_mouse_exited.bind(button))
+	button.focus_entered.connect(_on_main_menu_button_focus_entered.bind(button))
+	button.focus_exited.connect(_on_main_menu_button_focus_exited.bind(button))
+
+func _refresh_main_menu_button_visual(button: Button) -> void:
+	var base_color := button.get_meta("base_color", Color.WHITE) as Color
+	var hover_color := button.get_meta("hover_color", Color.WHITE) as Color
+	var pressed_color := button.get_meta("pressed_color", Color.WHITE) as Color
+	var is_hovered := button.get_global_rect().has_point(button.get_global_mouse_position())
+	var background_color := hover_color if is_hovered else base_color
+
+	var normal_style := _make_panel_style(background_color, Color(0.12, 0.2, 0.16), 2, 8, 3)
+	var focus_style := _make_panel_style(background_color, Color(0.12, 0.2, 0.16), 2, 8, 3)
+	focus_style.shadow_color = Color(0.06, 0.11, 0.09, 0.35)
+	focus_style.shadow_size = 5
+	focus_style.shadow_offset = Vector2(0, 3)
+
+	button.add_theme_stylebox_override("normal", normal_style)
+	button.add_theme_stylebox_override("hover", normal_style.duplicate())
+	button.add_theme_stylebox_override("pressed", _make_panel_style(pressed_color, Color(0.12, 0.2, 0.16), 2, 8, 3))
+	button.add_theme_stylebox_override("focus", focus_style)
+
 func _style_controls_header() -> void:
 	controls_back_button.text = ""
 	controls_back_button.custom_minimum_size = Vector2(30, 30)
 	controls_back_button.focus_mode = Control.FOCUS_ALL
+	controls_back_button.pivot_offset = controls_back_button.custom_minimum_size * 0.5
 	controls_back_button.icon = _make_back_icon()
 	controls_back_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	controls_back_button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	controls_back_button.add_theme_stylebox_override("normal", _make_panel_style(Color(0.24, 0.56, 0.92), Color(0.12, 0.25, 0.49), 3, 6, 6))
-	controls_back_button.add_theme_stylebox_override("hover", _make_panel_style(Color(0.31, 0.63, 0.97), Color(0.12, 0.25, 0.49), 3, 6, 6))
-	controls_back_button.add_theme_stylebox_override("pressed", _make_panel_style(Color(0.19, 0.48, 0.83), Color(0.12, 0.25, 0.49), 3, 6, 6))
-	controls_back_button.add_theme_stylebox_override("focus", _make_panel_style(Color(0.31, 0.63, 0.97), Color(0.12, 0.25, 0.49), 3, 6, 6))
+	controls_back_button.add_theme_stylebox_override("normal", _make_panel_style(Color(0.24, 0.56, 0.92), CONTROLS_BORDER_COLOR, 2, 6, 6))
+	controls_back_button.add_theme_stylebox_override("hover", _make_panel_style(Color(0.31, 0.63, 0.97), CONTROLS_BORDER_COLOR, 2, 6, 6))
+	controls_back_button.add_theme_stylebox_override("pressed", _make_panel_style(Color(0.19, 0.48, 0.83), CONTROLS_BORDER_COLOR, 2, 6, 6))
+	controls_back_button.add_theme_stylebox_override("focus", _make_panel_style(Color(0.31, 0.63, 0.97), CONTROLS_BORDER_COLOR, 2, 6, 6))
 
 	var header_panel := $UiLayer/MainUi/ControlsCenter/HeaderCenter/HeaderPanel as PanelContainer
 	header_panel.custom_minimum_size = Vector2(168, 30)
-	header_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.24, 0.56, 0.92), Color(0.12, 0.25, 0.49), 3, 18, 5))
+	header_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.24, 0.56, 0.92), CONTROLS_BORDER_COLOR, 2, 18, 5))
 
 	controls_title.add_theme_font_override("font", MENU_FONT)
 	controls_title.add_theme_font_size_override("font_size", 12)
@@ -135,9 +219,12 @@ func _style_controls_header() -> void:
 	controls_title.text = "CONTROLES"
 
 func _style_controls_panel() -> void:
-	controls_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.97, 0.93, 0.84), Color(0.35, 0.23, 0.18), 3, 12, 10))
+	controls_panel.add_theme_stylebox_override("panel", _make_panel_style(Color(0.97, 0.93, 0.84), CONTROLS_BORDER_COLOR, 2, 12, 10))
 	controls_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	controls_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	controls_list.columns = 2
+	controls_list.add_theme_constant_override("h_separation", 16)
+	controls_list.add_theme_constant_override("v_separation", 8)
 
 	var v_scroll_bar := controls_scroll.get_v_scroll_bar()
 	v_scroll_bar.custom_minimum_size = Vector2(3, 0)
@@ -215,12 +302,12 @@ func _keycode_to_label(keycode: Key) -> String:
 
 func _create_control_row(key_labels: PackedStringArray, action_text: String) -> HBoxContainer:
 	var row := HBoxContainer.new()
-	row.custom_minimum_size = Vector2(0, 24)
+	row.custom_minimum_size = Vector2(126, 24)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_theme_constant_override("separation", 6)
 
 	var keys_container := HBoxContainer.new()
-	keys_container.custom_minimum_size = Vector2(112, 0)
+	keys_container.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	keys_container.add_theme_constant_override("separation", 4)
 
 	for index in range(key_labels.size()):
@@ -229,7 +316,6 @@ func _create_control_row(key_labels: PackedStringArray, action_text: String) -> 
 		keys_container.add_child(_create_key_badge(key_labels[index]))
 
 	var action_label := Label.new()
-	action_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	action_label.add_theme_font_override("font", MENU_FONT)
 	action_label.add_theme_font_size_override("font_size", 8)
@@ -294,6 +380,17 @@ func _create_or_label() -> Label:
 	or_label.add_theme_color_override("font_color", Color(0.19, 0.16, 0.23))
 	or_label.text = "ou"
 	return or_label
+
+func _animate_controls_back_button(is_hovered: bool) -> void:
+	if controls_back_button_hover_tween != null:
+		controls_back_button_hover_tween.kill()
+
+	controls_back_button_hover_tween = create_tween()
+	controls_back_button_hover_tween.set_trans(Tween.TRANS_SINE)
+	controls_back_button_hover_tween.set_ease(Tween.EASE_OUT)
+
+	var target_modulate := Color(1.08, 1.08, 1.08, 1.0) if is_hovered else Color(1, 1, 1, 1)
+	controls_back_button_hover_tween.tween_property(controls_back_button, "modulate", target_modulate, 0.12)
 
 func _show_main_menu() -> void:
 	title_center.show()
@@ -433,3 +530,21 @@ func _on_controls_button_pressed() -> void:
 
 func _on_controls_back_button_pressed() -> void:
 	_show_main_menu()
+
+func _on_controls_back_button_mouse_entered() -> void:
+	_animate_controls_back_button(true)
+
+func _on_controls_back_button_mouse_exited() -> void:
+	_animate_controls_back_button(false)
+
+func _on_main_menu_button_mouse_entered(button: Button) -> void:
+	_refresh_main_menu_button_visual(button)
+
+func _on_main_menu_button_mouse_exited(button: Button) -> void:
+	_refresh_main_menu_button_visual(button)
+
+func _on_main_menu_button_focus_entered(button: Button) -> void:
+	_refresh_main_menu_button_visual(button)
+
+func _on_main_menu_button_focus_exited(button: Button) -> void:
+	_refresh_main_menu_button_visual(button)

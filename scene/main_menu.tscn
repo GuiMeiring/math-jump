@@ -143,7 +143,9 @@ grow_horizontal = 2
 grow_vertical = 2
 follow_focus = true
 
-[node name="ControlsList" type="VBoxContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll" unique_id=903218664]
+[node name="ControlsList" type="GridContainer" parent="UiLayer/MainUi/ControlsCenter/ControlsPanel/PanelMargin/ControlsScroll" unique_id=903218664]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
