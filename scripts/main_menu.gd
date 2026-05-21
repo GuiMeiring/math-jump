@@ -94,6 +94,7 @@ func _move_main_menu_focus(direction: int) -> void:
 func _build_static_preview() -> void:
 	DialogManager.balloons_enabled = false
 	var preview_scene: Node2D = PREVIEW_SCENE.instantiate()
+	_hide_preview_gameplay_ui(preview_scene)
 	preview_viewport.add_child(preview_scene)
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -111,6 +112,22 @@ func _build_static_preview() -> void:
 	preview_scene.process_mode = Node.PROCESS_MODE_DISABLED
 	preview_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	DialogManager.balloons_enabled = true
+
+func _hide_preview_gameplay_ui(preview_scene: Node) -> void:
+	for node_path in ["ControlGuide", "Player/HealthLayer", "Player/AttackFeedbackLayer"]:
+		var ui_node := preview_scene.get_node_or_null(node_path)
+		if ui_node == null:
+			continue
+
+		_hide_canvas_items(ui_node)
+
+func _hide_canvas_items(node: Node) -> void:
+	var canvas_item := node as CanvasItem
+	if canvas_item != null:
+		canvas_item.hide()
+
+	for child in node.get_children():
+		_hide_canvas_items(child)
 
 func _setup_ui() -> void:
 	_style_title_label(title_math, Color(1.0, 0.81, 0.22), 36)
