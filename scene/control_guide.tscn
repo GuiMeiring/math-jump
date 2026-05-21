@@ -1,0 +1,195 @@
+[gd_scene format=3 uid="uid://de2rmw7v5tw18"]
+
+[ext_resource type="FontFile" path="res://sprites/fonts/RevMiniPixel.ttf" id="1_font"]
+[ext_resource type="Texture2D" path="res://sprites/controls/W.png" id="2_w"]
+[ext_resource type="Texture2D" path="res://sprites/controls/A.png" id="3_a"]
+[ext_resource type="Texture2D" path="res://sprites/controls/D.png" id="4_d"]
+[ext_resource type="Texture2D" path="res://sprites/controls/S.png" id="5_s"]
+[ext_resource type="Texture2D" path="res://sprites/controls/Space.png" id="6_space"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w_key"]
+atlas = ExtResource("2_w")
+region = Rect2(40, 90, 400, 401)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a_key"]
+atlas = ExtResource("3_a")
+region = Rect2(31, 50, 417, 417)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d_key"]
+atlas = ExtResource("4_d")
+region = Rect2(29, 40, 412, 412)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s_key"]
+atlas = ExtResource("5_s")
+region = Rect2(30, 60, 424, 425)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_space_key"]
+atlas = ExtResource("6_space")
+region = Rect2(58, 128, 561, 124)
+
+[node name="ControlGuide" type="CanvasLayer"]
+layer = 12
+
+[node name="ScreenAnchor" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="GuideRow" type="HBoxContainer" parent="ScreenAnchor"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -25.0
+offset_right = 382.0
+offset_bottom = -6.0
+grow_horizontal = 1
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 0
+
+[node name="JumpCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/JumpCommand"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_w_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/JumpCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Pular"
+vertical_alignment = 1
+
+[node name="MoveLeftCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/MoveLeftCommand"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_a_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/MoveLeftCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Mover para esquerda"
+vertical_alignment = 1
+
+[node name="MoveRightCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/MoveRightCommand"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_d_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/MoveRightCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Mover para direita"
+vertical_alignment = 1
+
+[node name="DuckInteractCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/DuckInteractCommand"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_s_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/DuckInteractCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Abaixar / Defender"
+vertical_alignment = 1
+
+[node name="AttackCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/AttackCommand"]
+custom_minimum_size = Vector2(35, 8)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_space_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/AttackCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Atacar"
+vertical_alignment = 1

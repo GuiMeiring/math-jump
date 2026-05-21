@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://cpaf21edunayn" path="res://scripts/warning_sign.gd" id="11_ei81g"]
 [ext_resource type="PackedScene" uid="uid://c8we1ury3us0n" path="res://entities/skeleton.tscn" id="12_ei81g"]
 [ext_resource type="Texture2D" uid="uid://nu01lgytri8i" path="res://sprites/Mini FX, Items & UI/Mini UI/Speech_Emotes (16 x 16).png" id="12_ytc0w"]
+[ext_resource type="PackedScene" uid="uid://de2rmw7v5tw18" path="res://scene/control_guide.tscn" id="13_y1rfm"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t8vtq"]
 animations = [{
@@ -152,5 +153,7 @@ collision_mask = 2
 visibility_layer = 2
 position = Vector2(374.5, 134)
 shape = SubResource("RectangleShape2D_t8vtq")
+
+[node name="ControlGuide" parent="." instance=ExtResource("13_y1rfm")]
 
 [editable path="Camera"]
