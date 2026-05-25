@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 const MATH_ATTACK_MODAL = preload("res://entities/math_attack_modal.tscn")
+const MATH_ATTACK_MODAL_LAYER_NAME := "MathAttackModalLayer"
 
 signal lives_changed(current_lives: int, max_lives: int)
 
@@ -570,7 +571,9 @@ func get_attack_target():
 
 func open_attack_modal(target_enemy: Node, math_prompt: Dictionary) -> void:
 	active_attack_modal = MATH_ATTACK_MODAL.instantiate()
-	get_tree().root.add_child(active_attack_modal)
+	var modal_layer := create_attack_modal_layer()
+	modal_layer.add_child(active_attack_modal)
+	active_attack_modal.tree_exited.connect(modal_layer.queue_free)
 	active_attack_modal.answered.connect(_on_math_attack_modal_answered)
 	active_attack_modal.open_modal(
 		math_prompt.get("question", ""),
@@ -578,6 +581,14 @@ func open_attack_modal(target_enemy: Node, math_prompt: Dictionary) -> void:
 		int(math_prompt.get("answer", 0)),
 		target_enemy
 	)
+
+func create_attack_modal_layer() -> CanvasLayer:
+	var modal_layer := CanvasLayer.new()
+	modal_layer.name = MATH_ATTACK_MODAL_LAYER_NAME
+	modal_layer.layer = 100
+	modal_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().root.add_child(modal_layer)
+	return modal_layer
 
 func _on_math_attack_modal_answered(target_enemy: Node, is_correct: bool, did_timeout: bool) -> void:
 	active_attack_modal = null
