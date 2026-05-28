@@ -218,7 +218,6 @@ size_flags_vertical = 4
 mouse_filter = 2
 texture = SubResource("AtlasTexture_i_key")
 expand_mode = 1
-stretch_mode = 5
 
 [node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/InteractCommand"]
 custom_minimum_size = Vector2(0, 15)
@@ -246,7 +245,6 @@ size_flags_vertical = 4
 mouse_filter = 2
 texture = SubResource("AtlasTexture_o_key")
 expand_mode = 1
-stretch_mode = 5
 
 [node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/AdvanceCommand"]
 custom_minimum_size = Vector2(0, 15)
