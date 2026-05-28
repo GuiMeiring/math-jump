@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" path="res://sprites/controls/D.png" id="4_d"]
 [ext_resource type="Texture2D" path="res://sprites/controls/S.png" id="5_s"]
 [ext_resource type="Texture2D" path="res://sprites/controls/Space.png" id="6_space"]
+[ext_resource type="Texture2D" uid="uid://c6qnkw5uk4k2g" path="res://sprites/controls/I.png" id="7_i"]
+[ext_resource type="Texture2D" uid="uid://cj32u0d7ej5y5" path="res://sprites/controls/O.png" id="8_o"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w_key"]
 atlas = ExtResource("2_w")
@@ -26,6 +28,14 @@ region = Rect2(30, 60, 424, 425)
 [sub_resource type="AtlasTexture" id="AtlasTexture_space_key"]
 atlas = ExtResource("6_space")
 region = Rect2(58, 128, 561, 124)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i_key"]
+atlas = ExtResource("7_i")
+region = Rect2(129, 83, 260, 317)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o_key"]
+atlas = ExtResource("8_o")
+region = Rect2(108, 95, 297, 340)
 
 [node name="ControlGuide" type="CanvasLayer"]
 layer = 12
@@ -51,7 +61,7 @@ offset_bottom = -6.0
 grow_horizontal = 1
 grow_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 0
 
 [node name="JumpCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
@@ -62,7 +72,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/JumpCommand"]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -90,7 +100,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/MoveLeftCommand"]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -107,7 +117,7 @@ theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 5
-text = "Mover para esquerda"
+text = "Esquerda"
 vertical_alignment = 1
 
 [node name="MoveRightCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
@@ -118,7 +128,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/MoveRightCommand"]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -135,7 +145,7 @@ theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 5
-text = "Mover para direita"
+text = "Direita"
 vertical_alignment = 1
 
 [node name="DuckInteractCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
@@ -146,7 +156,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/DuckInteractCommand"]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -163,7 +173,7 @@ theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 5
-text = "Abaixar / Defender"
+text = "Defender"
 vertical_alignment = 1
 
 [node name="AttackCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
@@ -174,7 +184,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/AttackCommand"]
-custom_minimum_size = Vector2(35, 8)
+custom_minimum_size = Vector2(28, 8)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -192,4 +202,60 @@ theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 5
 text = "Atacar"
+vertical_alignment = 1
+
+[node name="InteractCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/InteractCommand"]
+custom_minimum_size = Vector2(9, 9)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_i_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/InteractCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Interagir"
+vertical_alignment = 1
+
+[node name="AdvanceCommand" type="HBoxContainer" parent="ScreenAnchor/GuideRow"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="KeyIcon" type="TextureRect" parent="ScreenAnchor/GuideRow/AdvanceCommand"]
+custom_minimum_size = Vector2(9, 9)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_o_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionLabel" type="Label" parent="ScreenAnchor/GuideRow/AdvanceCommand"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.19, 0.16, 0.23, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("1_font")
+theme_override_font_sizes/font_size = 5
+text = "Avancar"
 vertical_alignment = 1
