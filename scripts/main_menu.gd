@@ -103,14 +103,7 @@ func _build_static_preview() -> void:
 	if preview_camera != null:
 		preview_camera.position_smoothing_enabled = false
 
-	for water_path in ["Parallax/2 - Waters/AnimatedSprite2D", "Parallax/2 - Waters/AnimatedSprite2D2"]:
-		var water := preview_scene.get_node_or_null(water_path) as AnimatedSprite2D
-		if water == null:
-			continue
-
-		water.stop()
-	preview_scene.process_mode = Node.PROCESS_MODE_DISABLED
-	preview_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	preview_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	DialogManager.balloons_enabled = true
 
 func _hide_preview_gameplay_ui(preview_scene: Node) -> void:
