@@ -25,6 +25,7 @@ var direction = 1
 var can_throw = true
 @export var attack_cooldown := 1.2
 @export var attack_animation_speed_scale := 1.7
+@export var close_range_projectile_block_distance := 32.0
 var attack_cooldown_left := 0.0
 
 var math_system = MathSystem.new()
@@ -104,14 +105,15 @@ func walk_state(_delta):
 		scale.x *= -1
 		direction *= -1
 	
-	if player_detector.is_colliding():
+	if player_detector.is_colliding() and not is_player_too_close_for_projectile():
 		go_to_attack_state()
 
 func attack_state(_delta):
 	velocity.x = 0
 	
 	if anim.frame == 2 && can_throw:
-		throw_bone()
+		if not is_player_too_close_for_projectile():
+			throw_bone()
 		can_throw = false
 
 func hurt_state(_delta):
@@ -142,6 +144,20 @@ func throw_bone():
 	
 	new_bone.global_position = bone_start_position.global_position
 	new_bone.set_direction(self.direction)
+
+func is_player_too_close_for_projectile() -> bool:
+	var player := get_player()
+	if player == null:
+		return false
+
+	return global_position.distance_to(player.global_position) <= close_range_projectile_block_distance
+
+func get_player() -> Node2D:
+	var players := get_tree().get_nodes_in_group("player")
+	if players.is_empty():
+		return null
+
+	return players[0] as Node2D
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if anim.animation == "attack":
