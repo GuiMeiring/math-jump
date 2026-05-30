@@ -31,6 +31,7 @@ texture = ExtResource("1_4pksi")
 14:8/0 = 0
 1:1/size_in_atlas = Vector2i(3, 3)
 1:1/0 = 0
+1:1/0/z_index = -1
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hjahj"]
 resource_name = "entities-ice"
@@ -48,9 +49,10 @@ texture = ExtResource("2_b4fdq")
 4:5/0 = 0
 1:1/size_in_atlas = Vector2i(3, 3)
 1:1/0 = 0
+1:1/0/z_index = -1
 5:1/size_in_atlas = Vector2i(3, 3)
 5:1/0 = 0
-5:1/0/z_index = 2
+5:1/0/z_index = -1
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xnncp"]
 resource_name = "entitie-house"
@@ -86,11 +88,13 @@ texture = ExtResource("3_b4fdq")
 18:5/0 = 0
 1:1/size_in_atlas = Vector2i(3, 3)
 1:1/0 = 0
+1:1/0/z_index = -1
 5:1/size_in_atlas = Vector2i(3, 3)
 5:1/0 = 0
+5:1/0/z_index = -1
 9:1/size_in_atlas = Vector2i(3, 3)
 9:1/0 = 0
-9:1/0/z_index = 2
+9:1/0/z_index = -1
 
 [resource]
 sources/0 = SubResource("TileSetAtlasSource_xflqb")

@@ -28,14 +28,19 @@
 - [x] Usar terrain ice na camada `Terrain`.
 - [x] Usar entities ice na camada `Decoration`.
 - [x] Manter camera, player, limites, placa, guia e inimigos funcionais.
+- [x] Reorganizar as plataformas para a Ice nao repetir o layout da Tropic.
+- [x] Revisar o layout para quebrar a sensacao de sequencia repetida.
+- [x] Limpar temporariamente a camada `Decoration`.
+- [x] Reposicionar os 10 inimigos sobre as novas plataformas largas.
 - [ ] Validar a cena abrindo no editor Godot.
 - [ ] Jogar do inicio ao topo para confirmar saltos, camera e patrulha dos inimigos.
-- [ ] Confirmar visualmente que as decoracoes ice nao escondem enemies, player ou plataformas.
+- [ ] Confirmar visualmente o layout sem decoracao antes de adicionar detalhes.
 
 ## Definicao de pronto
 
 - `scene/ice.tscn` abre no Godot sem erro.
-- A fase usa terreno e decoracoes de gelo.
+- A fase usa terreno de gelo e deixa decoracoes para uma etapa posterior.
+- A fase tem layout de plataformas diferente da Tropic.
 - O parallax usa somente background parts do Winter World.
 - A rota segue a mesma base vertical da Tropic.
 - A fase pode ser jogada do spawn ate o topo sem atalhos do editor.
