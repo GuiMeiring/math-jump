@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://sprites/controls/S.png" id="5_s"]
 [ext_resource type="Texture2D" path="res://sprites/controls/Space.png" id="6_space"]
 [ext_resource type="Texture2D" uid="uid://c6qnkw5uk4k2g" path="res://sprites/controls/I.png" id="7_i"]
-[ext_resource type="Texture2D" uid="uid://cj32u0d7ej5y5" path="res://sprites/controls/O.png" id="8_o"]
+[ext_resource type="Texture2D" path="res://sprites/controls/O.png" id="8_o"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w_key"]
 atlas = ExtResource("2_w")

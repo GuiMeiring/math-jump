@@ -40,6 +40,7 @@ enum PlayerState {
 @export var attack_feedback_duration := 1.2
 @export var hurt_recovery_duration := 0.7
 @export var death_reload_delay := 0.9
+@export var menu_preview_mode := false
 @export var fall_damage_min_distance := 220.0
 @export var fall_damage_two_hearts_min_distance := 320.0
 @export var fall_damage_three_hearts_min_distance := 520.0
@@ -101,6 +102,11 @@ func _ready() -> void:
 	lives_changed.emit(current_lives, max_lives)
 
 func _physics_process(delta: float) -> void:
+	if menu_preview_mode:
+		process_menu_preview(delta)
+		move_and_slide()
+		return
+
 	var was_on_floor := is_on_floor()
 
 	if enemy_contact_cooldown_left > 0.0:
@@ -188,6 +194,19 @@ func go_to_hurt_state():
 	anim.play("hurt")
 	velocity.x = 0
 	hurt_timer.start(hurt_recovery_duration)
+
+func process_menu_preview(delta: float) -> void:
+	velocity.x = move_toward(velocity.x, 0, deceleration * delta)
+
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+		if velocity.y > 0.0 and status != PlayerState.fall:
+			go_to_fall_state()
+		return
+
+	jump_count = 0
+	if status != PlayerState.idle:
+		go_to_idle_state()
 
 func start_damage_recovery() -> void:
 	is_damage_recovering = true
@@ -472,6 +491,9 @@ func check_lethal_overlaps():
 			return
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
+	if menu_preview_mode:
+		return
+
 	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
 		return
 
@@ -487,6 +509,9 @@ func hit_lethal_area():
 	take_damage()
 
 func take_damage(amount: int = 1) -> void:
+	if menu_preview_mode:
+		return
+
 	if is_dead or status == PlayerState.hurt or is_damage_recovering:
 		return
 
