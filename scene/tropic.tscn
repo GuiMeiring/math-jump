@@ -117,15 +117,17 @@ centered = false
 [node name="Skeleton" parent="." unique_id=2002026928 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(285, 123)
+operation_type = "mult"
 
 [node name="Skeleton2" parent="." unique_id=163780925 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(416, -72)
+operation_type = "mult"
 
 [node name="Skeleton3" parent="." unique_id=1311552904 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(416, -232)
-operation_type = "div"
+operation_type = "mult"
 
 [node name="Skeleton4" parent="." unique_id=1837590528 instance=ExtResource("12_ei81g")]
 z_index = 2
@@ -145,22 +147,22 @@ operation_type = "div"
 [node name="Skeleton7" parent="." unique_id=2098486868 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(416, -872)
-operation_type = "div"
+operation_type = "sqrt"
 
 [node name="Skeleton8" parent="." unique_id=1764909266 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(128, -1032)
-operation_type = "div"
+operation_type = "sqrt"
 
 [node name="Skeleton9" parent="." unique_id=26844938 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(416, -1192)
-operation_type = "div"
+operation_type = "pow"
 
 [node name="Skeleton10" parent="." unique_id=577558514 instance=ExtResource("12_ei81g")]
 z_index = 2
 position = Vector2(410, -1590)
-operation_type = "div"
+operation_type = "pow"
 
 [node name="Limit" type="StaticBody2D" parent="." unique_id=78088808]
 position = Vector2(0, -850)
