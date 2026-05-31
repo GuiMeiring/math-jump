@@ -182,7 +182,7 @@ debug_color = Color(0.95239395, 0.18049824, 0.32764745, 0.41960785)
 [node name="WallDetector" type="RayCast2D" parent="." unique_id=1982986273]
 z_index = 1
 position = Vector2(0, 13)
-target_position = Vector2(12, 0)
+target_position = Vector2(10, 0)
 
 [node name="GroundDetector" type="RayCast2D" parent="." unique_id=864526723]
 position = Vector2(9, 0)
