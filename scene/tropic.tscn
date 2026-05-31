@@ -57,6 +57,8 @@ dialog_lines = Array[String](["Diego, ainda bem que você chegou!", "O Vale Trop
 [node name="Holly2" parent="." unique_id=1356798650 instance=ExtResource("16_holly")]
 position = Vector2(268, -1827)
 can_interact_multiple_times = false
+require_all_enemies_defeated = true
+remaining_enemies_dialog_lines = Array[String](["Ohh nao, Diego!", "Ainda existem inimigos no Vale Tropical.", "O equilibrio ainda nao foi restaurado.", "Derrote todos os inimigos e volte aqui."])
 dialog_lines = Array[String](["Diego, você conseguiu!", "O Vale Tropical voltou ao equilíbrio.", "Obrigada por corrigir os cálculos daqui.", "Mas Numeralia ainda precisa de você!", "Os Picos de Gelo também está em perigo!"])
 
 [node name="Camera" parent="." unique_id=1171748134 instance=ExtResource("3_ry6l7")]

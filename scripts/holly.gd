@@ -2,6 +2,12 @@ extends CharacterBody2D
 
 @export var max_fall_speed := 400.0
 @export var can_interact_multiple_times := true
+@export var require_all_enemies_defeated := false
+@export var remaining_enemies_dialog_lines: Array[String] = [
+	"Oh nao, Diego!",
+	"Ainda existem inimigos no caminho.",
+	"O equilibrio ainda nao foi restaurado.",
+]
 @export var dialog_position_offset := Vector2.ZERO
 @export var dialog_lines: Array[String] = [
 	"Ola, aventureiro!",
@@ -40,5 +46,31 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and can_interact() and not DialogManager.is_message_active:
-		has_interacted = true
-		DialogManager.start_message(dialog_anchor.global_position + dialog_position_offset, dialog_lines)
+		var has_pending_enemies := require_all_enemies_defeated and has_remaining_enemies()
+		var current_dialog_lines := get_current_dialog_lines(has_pending_enemies)
+		if not has_pending_enemies:
+			has_interacted = true
+		DialogManager.start_message(dialog_anchor.global_position + dialog_position_offset, current_dialog_lines)
+
+func get_current_dialog_lines(has_pending_enemies: bool) -> Array[String]:
+	if has_pending_enemies:
+		return remaining_enemies_dialog_lines
+
+	return dialog_lines
+
+func has_remaining_enemies() -> bool:
+	var current_scene := get_tree().current_scene
+	if current_scene == null:
+		return false
+
+	return has_attackable_enemy_in_node(current_scene)
+
+func has_attackable_enemy_in_node(node: Node) -> bool:
+	if node.has_method("is_attackable") and node.is_attackable():
+		return true
+
+	for child in node.get_children():
+		if has_attackable_enemy_in_node(child):
+			return true
+
+	return false
