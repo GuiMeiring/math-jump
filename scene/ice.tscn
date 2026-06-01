@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://cd05qxpqky7o0"]
 
-[ext_resource type="TileSet" uid="uid://57wix0efen5o" path="res://tiles/terrain.tres" id="1_5t5j4"]
+[ext_resource type="TileSet" path="res://tiles/terrain.tres" id="1_5t5j4"]
 [ext_resource type="PackedScene" uid="uid://x8mesfj338s7" path="res://entities/player.tscn" id="2_yc46m"]
 [ext_resource type="TileSet" uid="uid://cnlfh8eshitw0" path="res://tiles/decoration.tres" id="3_1j2n0"]
 [ext_resource type="PackedScene" uid="uid://dhbdblsutk2le" path="res://entities/camera.tscn" id="4_t7g2w"]
@@ -152,14 +152,14 @@ shape = SubResource("RectangleShape2D_side_limit")
 [node name="Penguin" parent="." unique_id=337455175 instance=ExtResource("12_477f2")]
 position = Vector2(253, 134)
 can_interact_multiple_times = false
-dialog_lines = Array[String](["Diego, bem-vindo aos Picos de Gelo!", "Este bioma ainda esta congelado pelo erro nas formulas.", "Os desafios daqui usam raiz, potencia e fatorial.", "Derrote os inimigos para restaurar o equilibrio final de Numeralia."])
+dialog_lines = Array[String](["Diego, bem-vindo aos Picos de Gelo!", "Este bioma ainda está congelado pelo erro nas fórmulas.", "Derrote os inimigos para restaurar o equilíbrio final de Numeralia."])
 
 [node name="Penguin2" parent="." unique_id=1514456540 instance=ExtResource("12_477f2")]
 position = Vector2(384, -1837)
 can_interact_multiple_times = false
 require_all_enemies_defeated = true
-next_scene_path = "res://scene/main_menu.tscn"
 remaining_enemies_dialog_lines = Array[String](["Ohh nao, Diego!", "Ainda existem inimigos nos Picos de Gelo.", "O equilibrio final ainda nao foi restaurado.", "Derrote todos os inimigos e volte aqui."])
-dialog_lines = Array[String](["Diego, voce conseguiu!", "Os Picos de Gelo voltaram ao equilibrio.", "Numeralia esta em paz novamente.", "Obrigado por corrigir os calculos ate o fim!"])
+next_scene_path = "res://scene/main_menu.tscn"
+dialog_lines = Array[String](["Diego, você conseguiu!", "Os Picos de Gelo voltaram ao equilibrio.", "Numeralia esta em paz novamente.", "Obrigado por corrigir os cálculos até o fim!"])
 
 [editable path="Camera"]

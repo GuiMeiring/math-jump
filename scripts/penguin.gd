@@ -4,16 +4,16 @@ extends CharacterBody2D
 @export var can_interact_multiple_times := true
 @export var require_all_enemies_defeated := false
 @export var remaining_enemies_dialog_lines: Array[String] = [
-	"Oh nao, Diego!",
-	"Ainda existem inimigos nos Picos de Gelo.",
-	"O equilibrio ainda nao foi restaurado.",
+	"Oh não, Diego!",
+	"Ainda existem inimigos no caminho.",
+	"O equilíbrio ainda não foi restaurado.",
 ]
 @export_file("*.tscn") var next_scene_path := ""
 @export var dialog_position_offset := Vector2.ZERO
 @export var dialog_lines: Array[String] = [
-	"Diego, voce chegou aos Picos de Gelo!",
-	"Aqui as formulas ficaram mais perigosas.",
-	"Use raiz e fatorial para corrigir este bioma.",
+	"Diego, você chegou aos Picos de Gelo!",
+	"Aqui as fórmulas ficaram mais perigosas.",
+	"Use seus conhecimentos matemáticos para corrigir este bioma.",
 ]
 
 @onready var interaction_indicator: Sprite2D = $InteractionIndicator
