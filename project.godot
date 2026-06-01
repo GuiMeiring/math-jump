@@ -87,6 +87,7 @@ advance_message={
 2d_physics/layer_4="level_end"
 2d_physics/layer_5="lethal_area"
 2d_physics/layer_6="attack_area"
+2d_physics/layer_7="narrators"
 
 [physics]
 

@@ -1,5 +1,7 @@
 # Finalizar Cena Tropic
 
+> Atualizacao: a distribuicao de operacoes desta task foi substituida pela progressao de duas fases em `balancear-operacoes-duas-fases.md`. A Tropic agora usa 3 `mult`, 3 `div`, 2 `sqrt` e 2 `pow`; `fact` fica para a fase Ice.
+
 ## Estado atual observado
 
 - Cena principal atual: `scene/tropic.tscn`.

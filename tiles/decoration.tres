@@ -1,10 +1,12 @@
 [gd_resource type="TileSet" format=3 uid="uid://cnlfh8eshitw0"]
 
 [ext_resource type="Texture2D" uid="uid://bumf8dykkwor" path="res://sprites/Seasonal Tilesets/3 - Tropics/Tropics_entities (16 x 16).png" id="1_4pksi"]
+[ext_resource type="Texture2D" uid="uid://c5i7cyjykcbir" path="res://sprites/Seasonal Tilesets/4 - Winter World/Winter_entities (16 x 16).png" id="2_b4fdq"]
 [ext_resource type="Texture2D" uid="uid://cxke3viiq4l68" path="res://sprites/Seasonal Tilesets/5 - Misc. universal tiles/House (112 x 96).png" id="2_k56fq"]
 [ext_resource type="Texture2D" uid="uid://cyoglngidm2yk" path="res://sprites/Seasonal Tilesets/1 - Grassland/Grassland_entities (16 x 16).png" id="3_b4fdq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xflqb"]
+resource_name = "entities-tropic"
 texture = ExtResource("1_4pksi")
 11:2/0 = 0
 12:2/0 = 0
@@ -29,14 +31,38 @@ texture = ExtResource("1_4pksi")
 14:8/0 = 0
 1:1/size_in_atlas = Vector2i(3, 3)
 1:1/0 = 0
+1:1/0/z_index = -1
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hjahj"]
+resource_name = "entities-ice"
+texture = ExtResource("2_b4fdq")
+9:1/0 = 0
+10:1/0 = 0
+11:1/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+1:5/0 = 0
+1:5/0/z_index = 2
+3:5/0 = 0
+4:5/0 = 0
+1:1/size_in_atlas = Vector2i(3, 3)
+1:1/0 = 0
+1:1/0/z_index = -1
+5:1/size_in_atlas = Vector2i(3, 3)
+5:1/0 = 0
+5:1/0/z_index = -1
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xnncp"]
+resource_name = "entitie-house"
 texture = ExtResource("2_k56fq")
 0:0/size_in_atlas = Vector2i(7, 6)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mjtd1"]
+resource_name = "entities-florest"
 texture = ExtResource("3_b4fdq")
 15:2/0 = 0
 16:2/0 = 0
@@ -62,13 +88,16 @@ texture = ExtResource("3_b4fdq")
 18:5/0 = 0
 1:1/size_in_atlas = Vector2i(3, 3)
 1:1/0 = 0
+1:1/0/z_index = -1
 5:1/size_in_atlas = Vector2i(3, 3)
 5:1/0 = 0
+5:1/0/z_index = -1
 9:1/size_in_atlas = Vector2i(3, 3)
 9:1/0 = 0
-9:1/0/z_index = 2
+9:1/0/z_index = -1
 
 [resource]
 sources/0 = SubResource("TileSetAtlasSource_xflqb")
 sources/2 = SubResource("TileSetAtlasSource_xnncp")
 sources/3 = SubResource("TileSetAtlasSource_mjtd1")
+sources/1 = SubResource("TileSetAtlasSource_hjahj")

@@ -7,36 +7,30 @@ description: Use when assigning math operations, difficulty, enemy question type
 
 Use one main new math concept per scene. Mix older operations as review, not as noise.
 
-## Recommended Four-Scene Progression
+## Recommended Two-Scene Progression
 
-Scene 1:
+The current game progression uses only `Tropic` and `Ice`.
 
-- Main operation: `mult`
-- Purpose: basic multiplication fluency.
-- Enemy mix: all `mult`.
+Tropic:
 
-Scene 2, Tropic:
+- Purpose: start easy and introduce the core operation ladder.
+- Enemy mix for 10 enemies: 3 `mult`, 3 `div`, 2 `sqrt`, 2 `pow`.
+- Use `mult` in the first encounters.
+- Use `div` in the middle of the climb.
+- Introduce `sqrt` and `pow` only near the end.
+- Avoid `fact` in Tropic.
 
-- Main operation: `div`
-- Review operation: `mult`
-- Enemy mix for 6 enemies: 2 `mult`, 4 `div`.
-- Avoid `fact`, `sqrt`, and `pow` in the main route.
+Ice:
 
-Scene 3:
-
-- Main operation: `sqrt`
-- Optional bridge: `pow`, if power remains part of the game design.
-- Enemy mix: mostly `sqrt`, with some `div` or `mult` review.
-
-Scene 4:
-
-- Main operation: `fact`
-- Review operations: `mult`, `div`, `sqrt`.
-- Keep factorial values small unless the UI and answer options are rebalanced.
+- Purpose: review late Tropic operations and finish with the hardest operation.
+- Enemy mix for 10 enemies: 1 `div`, 2 `sqrt`, 3 `pow`, 4 `fact`.
+- Start with one `div` review enemy.
+- Reinforce `sqrt` before increasing to `pow`.
+- Use `fact` only in the upper/harder part of the scene.
 
 Boss:
 
-- Use mixed operations from all previous scenes.
+- Use mixed operations from both scenes.
 - Start with review questions, then increase difficulty through phases.
 
 ## Current Code Operations
@@ -53,8 +47,8 @@ Set the operation through each enemy's exported `operation_type`.
 
 ## Balancing Rules
 
-- Do not introduce factorial before the player has already mastered multiplication and division.
+- Do not introduce factorial before the player has already seen multiplication, division, square root, and power.
 - Keep division exact, as the current generator already does.
 - Keep square roots as perfect squares unless the answer system changes.
 - Keep powers optional or late-game if the formal design remains multiplication, division, root, and factorial.
-- Add enemy count gradually: scene 1 should be lighter, scene 2 moderate, scene 3 harder, scene 4 hardest before the boss.
+- Keep the two-scene curve readable: Tropic introduces difficulty gradually, Ice starts with review and ends with factorial.

@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://c17vbc6hoya1h"]
+
+[ext_resource type="Texture2D" uid="uid://nu01lgytri8i" path="res://sprites/Mini FX, Items & UI/Mini UI/Speech_Emotes (16 x 16).png" id="3_interaction_icon"]
+[ext_resource type="Texture2D" uid="uid://c1on8gxm5r7fr" path="res://sprites/Sprite Pack 7/2 - Holly/Idle (32 x 32).png" id="7_idle"]
+[ext_resource type="Script" uid="uid://c8nt3kavlgmwn" path="res://scripts/holly.gd" id="11_holly_script"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
+atlas = ExtResource("7_idle")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("7_idle")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("7_idle")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("7_idle")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_4"]
+atlas = ExtResource("7_idle")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_5"]
+atlas = ExtResource("7_idle")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_6"]
+atlas = ExtResource("7_idle")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_7"]
+atlas = ExtResource("7_idle")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_8"]
+atlas = ExtResource("7_idle")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_holly"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_8")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wua5w"]
+radius = 9.0
+height = 22.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction_area"]
+size = Vector2(72, 36)
+
+[node name="Holly" type="CharacterBody2D" unique_id=1356798650]
+collision_layer = 64
+floor_snap_length = 8.0
+script = ExtResource("11_holly_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=199159268]
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_holly")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1305987848]
+position = Vector2(0, 1.7)
+shape = SubResource("CapsuleShape2D_wua5w")
+
+[node name="DialogAnchor" type="Marker2D" parent="." unique_id=14599447]
+
+[node name="InteractionIndicator" type="Sprite2D" parent="." unique_id=888891143]
+z_index = 4
+position = Vector2(0, -21)
+texture = ExtResource("3_interaction_icon")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=489058565]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=818974027]
+shape = SubResource("RectangleShape2D_interaction_area")

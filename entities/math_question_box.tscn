@@ -5,6 +5,7 @@
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="2_ewyxa"]
 
 [node name="math_question_box" type="MarginContainer" unique_id=397823055]
+z_index = 10
 offset_right = 18.0
 offset_bottom = 16.0
 script = ExtResource("1_ewyxa")

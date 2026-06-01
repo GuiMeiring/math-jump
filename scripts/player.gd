@@ -41,6 +41,7 @@ enum PlayerState {
 @export var hurt_recovery_duration := 0.7
 @export var death_reload_delay := 0.9
 @export var menu_preview_mode := false
+@export var starts_facing_left := false
 @export var fall_damage_min_distance := 220.0
 @export var fall_damage_two_hearts_min_distance := 320.0
 @export var fall_damage_three_hearts_min_distance := 520.0
@@ -98,6 +99,7 @@ func _ready() -> void:
 	clear_damage_flash()
 	set_default_sprite_position()
 	go_to_idle_state()
+	set_facing_direction(-1 if starts_facing_left else 1)
 	hide_attack_feedback()
 	lives_changed.emit(current_lives, max_lives)
 
@@ -138,7 +140,7 @@ func _physics_process(delta: float) -> void:
 		PlayerState.hurt:
 			hurt_state(delta)
 
-	process_enemy_contact_overlap_damage()
+	process_enemy_contact_overlap_push()
 	check_lethal_overlaps()
 
 	move_and_slide()
@@ -266,23 +268,22 @@ func resolve_enemy_body_collisions() -> void:
 		if collision.get_normal().dot(Vector2.UP) <= 0.7:
 			continue
 
-		try_take_enemy_contact_damage()
+		enemy_contact_cooldown_left = enemy_contact_cooldown_duration
 		push_player_off_enemy(enemy)
 		return
 
 func is_enemy_body(node: Node) -> bool:
 	return node.has_method("is_attackable")
 
-func can_take_enemy_contact_damage() -> bool:
+func can_apply_enemy_contact_push() -> bool:
 	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_damage_recovering and enemy_contact_cooldown_left <= 0.0
 
-func try_take_enemy_contact_damage(enemy: Node2D = null) -> bool:
-	if not can_take_enemy_contact_damage():
+func try_apply_enemy_contact_push(enemy: Node2D = null) -> bool:
+	if not can_apply_enemy_contact_push():
 		return false
 
 	enemy_contact_cooldown_left = enemy_contact_cooldown_duration
 	apply_enemy_contact_knockback(enemy)
-	take_damage()
 	return true
 
 func apply_enemy_contact_knockback(enemy: Node2D = null) -> void:
@@ -302,13 +303,13 @@ func apply_enemy_contact_knockback(enemy: Node2D = null) -> void:
 		status = PlayerState.fall
 		anim.play("fall")
 
-func process_enemy_contact_overlap_damage() -> void:
-	if not can_take_enemy_contact_damage():
+func process_enemy_contact_overlap_push() -> void:
+	if not can_apply_enemy_contact_push():
 		return
 
 	for area in hit_box.get_overlapping_areas():
 		if area.is_in_group("enemies"):
-			try_take_enemy_contact_damage(area.get_parent() as Node2D)
+			try_apply_enemy_contact_push(area.get_parent() as Node2D)
 			return
 
 func push_player_off_enemy(enemy: Node2D) -> void:
@@ -429,11 +430,14 @@ func update_attack_sprite_position() -> void:
 func update_direction():
 	direction = Input.get_axis("left", "right")
 
-	if direction < 0:
+	set_facing_direction(direction)
+
+func set_facing_direction(facing_direction: float) -> void:
+	if facing_direction < 0:
 		anim.flip_h = true
 		attack_area.scale.x = -1
 
-	elif direction > 0:
+	elif facing_direction > 0:
 		anim.flip_h = false
 		attack_area.scale.x = 1
 
@@ -441,7 +445,10 @@ func can_jump() -> bool:
 	return jump_count < max_jump_count
 
 func can_attack() -> bool:
-	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_ducking() and not is_instance_valid(active_attack_modal)
+	return not is_dead and status != PlayerState.hurt and status != PlayerState.attack and not is_ducking() and not is_enemy_contact_push_active() and not is_instance_valid(active_attack_modal)
+
+func is_enemy_contact_push_active() -> bool:
+	return enemy_contact_cooldown_left > 0.0
 
 func should_lock_attack_movement() -> bool:
 	return status == PlayerState.attack and is_instance_valid(pending_attack_target)
@@ -482,7 +489,7 @@ func set_duck_collision(is_ducking_state: bool):
 	hit_box_collision_shape.position.y = DUCK_HITBOX_Y if is_ducking_state else STANDING_HITBOX_Y
 
 func check_lethal_overlaps():
-	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
+	if status == PlayerState.hurt or is_damage_recovering:
 		return
 
 	for area in hit_box.get_overlapping_areas():
@@ -494,11 +501,13 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	if menu_preview_mode:
 		return
 
-	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
+	if status == PlayerState.hurt or is_damage_recovering:
 		return
 
 	if area.is_in_group("enemies"):
-		try_take_enemy_contact_damage(area.get_parent() as Node2D)
+		if status == PlayerState.attack:
+			return
+		try_apply_enemy_contact_push(area.get_parent() as Node2D)
 	elif area.is_in_group("lethalArea"):
 		if is_defending_against(area):
 			apply_defense_push()
