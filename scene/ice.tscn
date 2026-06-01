@@ -7,16 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://677b8xtfste3" path="res://sprites/Seasonal Tilesets/4 - Winter World/Background parts/3 - Big_mountain_BG.png" id="5_c8q0l"]
 [ext_resource type="Texture2D" uid="uid://d1ga21sw86mt" path="res://sprites/Seasonal Tilesets/4 - Winter World/Background parts/2 - Smaller_mountains.png" id="6_t1rve"]
 [ext_resource type="Texture2D" uid="uid://g31sylf8sagc" path="res://sprites/Seasonal Tilesets/4 - Winter World/Background parts/1 - Snowy_foreground_area.png" id="7_yti04"]
-[ext_resource type="Script" uid="uid://cpaf21edunayn" path="res://scripts/warning_sign.gd" id="8_53opn"]
 [ext_resource type="PackedScene" uid="uid://c8we1ury3us0n" path="res://entities/skeleton.tscn" id="9_i0mrl"]
-[ext_resource type="Texture2D" uid="uid://nu01lgytri8i" path="res://sprites/Mini FX, Items & UI/Mini UI/Speech_Emotes (16 x 16).png" id="10_1qokg"]
 [ext_resource type="PackedScene" uid="uid://de2rmw7v5tw18" path="res://scene/control_guide.tscn" id="11_77kb5"]
+[ext_resource type="PackedScene" uid="uid://bpp38b8f62vd8" path="res://entities/penguin.tscn" id="12_477f2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_side_limit"]
 size = Vector2(21, 2300)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_warning_sign"]
-size = Vector2(31, 20)
 
 [node name="Ice" type="Node2D" unique_id=714226791]
 metadata/_edit_horizontal_guides_ = [-164.0]
@@ -151,26 +147,19 @@ visibility_layer = 6
 position = Vector2(580, 0)
 shape = SubResource("RectangleShape2D_side_limit")
 
-[node name="warning_sign" type="Node2D" parent="." unique_id=1606187520]
-position = Vector2(34, -1)
-script = ExtResource("8_53opn")
-
-[node name="textture" type="Sprite2D" parent="warning_sign" unique_id=1220154253]
-visible = false
-z_index = 4
-position = Vector2(150, 150)
-texture = ExtResource("10_1qokg")
-region_enabled = true
-region_rect = Rect2(0, 0, 16, 16)
-
-[node name="area_sign" type="Area2D" parent="warning_sign" unique_id=167287677]
-collision_mask = 2
-
-[node name="collision" type="CollisionShape2D" parent="warning_sign/area_sign" unique_id=952953936]
-visibility_layer = 2
-position = Vector2(149.5, 166)
-shape = SubResource("RectangleShape2D_warning_sign")
-
 [node name="ControlGuide" parent="." unique_id=1071225711 instance=ExtResource("11_77kb5")]
+
+[node name="Penguin" parent="." unique_id=337455175 instance=ExtResource("12_477f2")]
+position = Vector2(253, 134)
+can_interact_multiple_times = false
+dialog_lines = Array[String](["Diego, bem-vindo aos Picos de Gelo!", "Este bioma ainda esta congelado pelo erro nas formulas.", "Os desafios daqui usam raiz, potencia e fatorial.", "Derrote os inimigos para restaurar o equilibrio final de Numeralia."])
+
+[node name="Penguin2" parent="." unique_id=1514456540 instance=ExtResource("12_477f2")]
+position = Vector2(384, -1837)
+can_interact_multiple_times = false
+require_all_enemies_defeated = true
+next_scene_path = "res://scene/main_menu.tscn"
+remaining_enemies_dialog_lines = Array[String](["Ohh nao, Diego!", "Ainda existem inimigos nos Picos de Gelo.", "O equilibrio final ainda nao foi restaurado.", "Derrote todos os inimigos e volte aqui."])
+dialog_lines = Array[String](["Diego, voce conseguiu!", "Os Picos de Gelo voltaram ao equilibrio.", "Numeralia esta em paz novamente.", "Obrigado por corrigir os calculos ate o fim!"])
 
 [editable path="Camera"]
