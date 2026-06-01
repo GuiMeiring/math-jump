@@ -59,7 +59,6 @@ Fluxo geral:
 - Plataforma vertical com câmera seguindo o player.
 - Movimento lateral, pulo e pulo duplo.
 - Sistema de vidas com corações.
-- Dano por contato com inimigos.
 - Dano por projéteis.
 - Dano por queda.
 - Defesa contra projéteis ao abaixar virado para a direção correta.
@@ -89,7 +88,7 @@ Fluxo do ataque matemático:
 1. O player tenta atacar.
 2. Se houver inimigo válido no alcance, o modal matemático abre.
 3. O modal mostra a pergunta, três alternativas e um limite de tempo.
-4. Se o jogador acertar, Diego executa o ataque e o inimigo entra em dano.
+4. Se o jogador acertar, Diego executa o ataque e o inimigo sofre o dano.
 5. Se errar ou o tempo acabar, Diego sofre dano.
 
 ```mermaid
@@ -217,9 +216,8 @@ Responsabilidades:
 
 ```text
 math-jump/
-|- .agent/       # notas, tarefas e instruções locais do projeto
-|- entities/     # cenas reutilizáveis, como player, inimigos, UI e personagens
-|- scene/        # mapas e telas principais
+|- entities/     # entidades, como player, inimigos, UI e personagens
+|- scene/        # cenas e tela principal
 |- scripts/      # scripts GDScript
 |- sprites/      # assets visuais, fontes e UI
 |- tiles/        # tilesets do projeto
