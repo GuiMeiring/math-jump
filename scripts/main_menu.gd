@@ -198,7 +198,7 @@ func _style_map_title_label(label: Label) -> void:
 
 func _style_menu_button(button: Button, button_text: String, base_color: Color, hover_color: Color, pressed_color: Color) -> void:
 	button.text = button_text
-	button.custom_minimum_size = Vector2(144, 27)
+	button.custom_minimum_size = Vector2(128, 24)
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_filter = Control.MOUSE_FILTER_STOP
 	button.pivot_offset = button.custom_minimum_size * 0.5
