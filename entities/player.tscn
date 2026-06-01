@@ -16,6 +16,34 @@
 radius = 12.0
 height = 40.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_0"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(0, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_1"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(80, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_2"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(160, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_3"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(240, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_4"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(320, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_5"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(400, 0, 80, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack_6"]
+atlas = ExtResource("6_0yw1t")
+region = Rect2(480, 0, 80, 64)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_0i614"]
 atlas = ExtResource("2_qsoyl")
 region = Rect2(0, 0, 48, 48)
@@ -67,50 +95,6 @@ region = Rect2(192, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_kdgjc"]
 atlas = ExtResource("3_e4p34")
 region = Rect2(240, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_0"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(0, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_1"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(80, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_2"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(160, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_3"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(240, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_4"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(320, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_5"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(400, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_attack_6"]
-atlas = ExtResource("6_0yw1t")
-region = Rect2(480, 0, 80, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_heart_0"]
-atlas = ExtResource("7_a3r8p")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_heart_1"]
-atlas = ExtResource("7_a3r8p")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_heart_2"]
-atlas = ExtResource("7_a3r8p")
-region = Rect2(32, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_heart_3"]
-atlas = ExtResource("7_a3r8p")
-region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ef06p"]
 animations = [{
@@ -213,6 +197,28 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qsoyl"]
+size = Vector2(25, 43.333332)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6nm46"]
+size = Vector2(28, 44)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_0"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_1"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_2"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heart_3"]
+atlas = ExtResource("7_a3r8p")
+region = Rect2(48, 0, 16, 16)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_heart_spin"]
 animations = [{
 "frames": [{
@@ -232,12 +238,6 @@ animations = [{
 "name": &"spin",
 "speed": 8.0
 }]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qsoyl"]
-size = Vector2(25, 43.333332)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_6nm46"]
-size = Vector2(40, 43.333)
 
 [node name="Player" type="CharacterBody2D" unique_id=1649635526 groups=["player"]]
 z_index = 1
@@ -268,7 +268,7 @@ collision_layer = 32
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack" unique_id=235176035]
-position = Vector2(20, 0)
+position = Vector2(16.666666, 0)
 shape = SubResource("RectangleShape2D_6nm46")
 debug_color = Color(0, 0.64432645, 0.28915563, 0.41960785)
 
@@ -276,50 +276,26 @@ debug_color = Color(0, 0.64432645, 0.28915563, 0.41960785)
 
 [node name="ReloadTimer" type="Timer" parent="." unique_id=2110003079]
 
-[node name="HurtTimer" type="Timer" parent="."]
+[node name="HurtTimer" type="Timer" parent="." unique_id=1151241330]
 one_shot = true
 
-[node name="AttackFeedbackLayer" type="CanvasLayer" parent="."]
+[node name="AttackFeedbackLayer" type="CanvasLayer" parent="." unique_id=1384496120]
 layer = 10
 
-[node name="HealthLayer" type="CanvasLayer" parent="."]
-layer = 20
-
-[node name="HeartsContainer" type="Node2D" parent="HealthLayer"]
-position = Vector2(14, 10)
-scale = Vector2(1.5, 1.5)
-
-[node name="Heart1" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
-sprite_frames = SubResource("SpriteFrames_heart_spin")
-animation = &"spin"
-frame = 0
-
-[node name="Heart2" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
-position = Vector2(10, 0)
-sprite_frames = SubResource("SpriteFrames_heart_spin")
-animation = &"spin"
-frame = 0
-
-[node name="Heart3" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer"]
-position = Vector2(20, 0)
-sprite_frames = SubResource("SpriteFrames_heart_spin")
-animation = &"spin"
-frame = 0
-
-[node name="AttackFeedbackContainer" type="CenterContainer" parent="AttackFeedbackLayer"]
+[node name="AttackFeedbackContainer" type="CenterContainer" parent="AttackFeedbackLayer" unique_id=1617671104]
 visible = false
-offset_right = 0.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="AttackFeedbackBox" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer"]
+[node name="AttackFeedbackBox" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer" unique_id=328050157]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 
-[node name="Background" type="NinePatchRect" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox"]
+[node name="Background" type="NinePatchRect" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox" unique_id=1858943566]
 layout_mode = 2
 texture = ExtResource("5_5h5u0")
 region_rect = Rect2(0, 0, 16, 16)
@@ -328,14 +304,14 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
-[node name="LabelMargin" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox"]
+[node name="LabelMargin" type="MarginContainer" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox" unique_id=419289586]
 layout_mode = 2
 theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 4
 
-[node name="AttackFeedbackLabel" type="Label" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin"]
+[node name="AttackFeedbackLabel" type="Label" parent="AttackFeedbackLayer/AttackFeedbackContainer/AttackFeedbackBox/LabelMargin" unique_id=1665184095]
 custom_minimum_size = Vector2(220, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -347,13 +323,34 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="AttackFeedbackTimer" type="Timer" parent="AttackFeedbackLayer"]
+[node name="AttackFeedbackTimer" type="Timer" parent="AttackFeedbackLayer" unique_id=482042669]
 one_shot = true
 
+[node name="HealthLayer" type="CanvasLayer" parent="." unique_id=2086321853]
+layer = 20
+
+[node name="HeartsContainer" type="Node2D" parent="HealthLayer" unique_id=1224980389]
+position = Vector2(14, 10)
+scale = Vector2(1.5, 1.5)
+
+[node name="Heart1" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer" unique_id=1462759583]
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+
+[node name="Heart2" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer" unique_id=1927571864]
+position = Vector2(10, 0)
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+
+[node name="Heart3" type="AnimatedSprite2D" parent="HealthLayer/HeartsContainer" unique_id=305720338]
+position = Vector2(20, 0)
+sprite_frames = SubResource("SpriteFrames_heart_spin")
+animation = &"spin"
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
 [connection signal="area_entered" from="Attack" to="." method="_on_attack_area_entered"]
 [connection signal="area_exited" from="Attack" to="." method="_on_attack_area_exited"]
-[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="AttackFeedbackLayer/AttackFeedbackTimer" to="." method="_on_attack_feedback_timer_timeout"]

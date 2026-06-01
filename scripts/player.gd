@@ -489,7 +489,7 @@ func set_duck_collision(is_ducking_state: bool):
 	hit_box_collision_shape.position.y = DUCK_HITBOX_Y if is_ducking_state else STANDING_HITBOX_Y
 
 func check_lethal_overlaps():
-	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
+	if status == PlayerState.hurt or is_damage_recovering:
 		return
 
 	for area in hit_box.get_overlapping_areas():
@@ -501,10 +501,12 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	if menu_preview_mode:
 		return
 
-	if status == PlayerState.hurt or status == PlayerState.attack or is_damage_recovering:
+	if status == PlayerState.hurt or is_damage_recovering:
 		return
 
 	if area.is_in_group("enemies"):
+		if status == PlayerState.attack:
+			return
 		try_apply_enemy_contact_push(area.get_parent() as Node2D)
 	elif area.is_in_group("lethalArea"):
 		if is_defending_against(area):
