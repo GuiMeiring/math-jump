@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://ceffagfux1xeg"]
 
-[ext_resource type="TileSet" uid="uid://57wix0efen5o" path="res://tiles/terrain.tres" id="1_8yo2w"]
+[ext_resource type="TileSet" uid="uid://57wix0efen5o" path="res://tiles/Terrain.tres" id="1_8yo2w"]
 [ext_resource type="PackedScene" uid="uid://x8mesfj338s7" path="res://entities/player.tscn" id="2_bmxgx"]
 [ext_resource type="TileSet" uid="uid://cnlfh8eshitw0" path="res://tiles/decoration.tres" id="2_d18o5"]
 [ext_resource type="PackedScene" uid="uid://dhbdblsutk2le" path="res://entities/camera.tscn" id="3_ry6l7"]
