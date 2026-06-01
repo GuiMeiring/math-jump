@@ -2,7 +2,7 @@ extends Control
 
 const TROPIC_SCENE_PATH := "res://scene/tropic.tscn"
 const ICE_SCENE_PATH := "res://scene/ice.tscn"
-const PREVIEW_SCENE := preload("res://scene/tropic.tscn")
+const PREVIEW_SCENE_PATH := TROPIC_SCENE_PATH
 const MENU_FONT := preload("res://sprites/fonts/RevMiniPixel.ttf")
 
 @onready var preview_viewport: SubViewport = $PreviewContainer/PreviewViewport
@@ -117,8 +117,18 @@ func _focus_next_map_button() -> void:
 		tropical_button.grab_focus()
 
 func _build_static_preview() -> void:
+	var preview_scene_resource := load(PREVIEW_SCENE_PATH) as PackedScene
+	if preview_scene_resource == null:
+		push_warning("Could not load menu preview scene: %s" % PREVIEW_SCENE_PATH)
+		return
+
 	DialogManager.balloons_enabled = false
-	var preview_scene: Node2D = PREVIEW_SCENE.instantiate()
+	var preview_scene := preview_scene_resource.instantiate() as Node2D
+	if preview_scene == null:
+		push_warning("Menu preview scene root must be a Node2D: %s" % PREVIEW_SCENE_PATH)
+		DialogManager.balloons_enabled = true
+		return
+
 	_configure_preview_scene(preview_scene)
 	_hide_preview_gameplay_ui(preview_scene)
 	preview_viewport.add_child(preview_scene)
