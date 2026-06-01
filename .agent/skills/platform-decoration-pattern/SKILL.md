@@ -13,11 +13,10 @@ Use this pattern when decorating platform scenes.
 - Do not change the `Terrain` TileMapLayer when the task is only decoration.
 - Preserve existing user-placed decorations.
 - Add decorations as accents, not as visual noise.
-- Keep the player path, enemies, signs, and platform edges readable.
+- Keep the player path, enemies, interactive characters, and platform edges readable.
 - Avoid placing large decorations over enemies, spawn points, or tight jump targets.
 - Prefer decoration near platform edges, leaving the middle readable for movement and combat.
-- Use the warning sign only as an interaction point for the communication balloon.
-- Keep the visual sign/plate decoration separate from the message trigger logic.
+- Keep visual decoration separate from character message trigger logic.
 - Keep enemies on one consistent z-index above platform decorations.
 
 ## Tropic Decoration Style
@@ -51,5 +50,5 @@ After editing:
 - Confirm no `Terrain` platform was changed.
 - Confirm enemies remain visually readable.
 - Confirm all enemies use the same z-index when decoration has foreground tiles.
-- Confirm decorations do not hide the route, warning sign, or player spawn.
+- Confirm decorations do not hide the route, interactive characters, or player spawn.
 - Playtest visually in Godot when available.

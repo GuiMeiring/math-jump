@@ -63,6 +63,6 @@ Before considering the scene complete:
 - Verify each enemy can patrol without falling or getting stuck.
 - Verify every enemy opens the math modal and can be defeated.
 - Verify added decorations preserve readability and do not hide enemies or jump targets.
-- Verify the warning sign is only used as the interaction point for the communication balloon.
+- Verify interactive character dialogue remains attached to Holly/Penguin-style character scenes, not standalone sign nodes.
 - Verify all enemies use one consistent z-index above platform decorations.
 - Verify parallax remains unchanged when it was out of scope.

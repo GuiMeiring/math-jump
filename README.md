@@ -86,7 +86,7 @@ Atualmente o projeto já possui os seguintes sistemas jogáveis:
 - recarregamento da cena ao morrer
 - inimigo `Skeleton` com patrulha, detecção do player, ataque e estado de dano
 - projétil `SpinningBone`
-- sistema de diálogo para placa/interação
+- sistema de diálogo para personagens interativos
 - balão com expressão matemática acima dos inimigos
 - geração de perguntas matemáticas com alternativas
 
@@ -252,10 +252,7 @@ Fluxo resumido:
 
 ### Math Balloon
 
-Arquivos principais:
-
-- `scripts/math_balloon.gd`
-- `scripts/math_question_box.gd`
+Arquivo principal: `scripts/math_question_box.gd`
 
 Responsabilidades atuais:
 
@@ -309,15 +306,20 @@ Fluxo resumido:
 - controla avanço de mensagem
 - armazena estado matemático por identificador do inimigo
 
-### Warning Sign
+### Personagens Interativos
 
-Arquivo principal: `scripts/warning_sign.gd`
+Arquivos principais:
+
+- `scripts/holly.gd`
+- `scripts/penguin.gd`
 
 Responsabilidades atuais:
 
 - detectar quando o player pode interagir
 - mostrar indicador visual de interação
-- iniciar o diálogo da placa
+- iniciar diálogos de história
+- bloquear a conclusão da fase enquanto houver inimigos vivos
+- trocar de cena após a conversa final quando configurado
 
 ### Camera
 
