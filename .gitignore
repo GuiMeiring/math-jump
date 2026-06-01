@@ -1,3 +1,33 @@
-# Godot 4+ specific ignores
+# Godot cache/import metadata
 .godot/
+/.import/
+
+# Android export workspace
 /android/
+
+# Build/export output
+/build/
+/builds/
+/dist/
+/export/
+/exports/
+*.apk
+*.aab
+*.exe
+*.x86_64
+*.x86_32
+*.app
+*.dmg
+*.zip
+
+# Local export settings
+export.cfg
+export_presets.cfg
+
+# Mono/.NET generated files
+/.mono/
+data_*/
+mono_crash.*.json
+
+# Temporary files
+*.tmp
