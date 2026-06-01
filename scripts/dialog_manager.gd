@@ -1,5 +1,7 @@
 extends Node
 
+signal message_finished
+
 @onready var dialog_box_scene = preload("res://entities/math_question_box.tscn")
 var message_lines : Array[String] = []
 var current_line = 0
@@ -40,6 +42,7 @@ func _unhandled_input(event):
 		if current_line >= message_lines.size():
 			is_message_active = false
 			current_line = 0
+			message_finished.emit()
 			return
 		show_text()
 

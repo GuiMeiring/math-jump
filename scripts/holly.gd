@@ -4,10 +4,11 @@ extends CharacterBody2D
 @export var can_interact_multiple_times := true
 @export var require_all_enemies_defeated := false
 @export var remaining_enemies_dialog_lines: Array[String] = [
-	"Oh nao, Diego!",
+	"Oh não, Diego!",
 	"Ainda existem inimigos no caminho.",
-	"O equilibrio ainda nao foi restaurado.",
+	"O equilíbrio ainda não foi restaurado.",
 ]
+@export_file("*.tscn") var next_scene_path := ""
 @export var dialog_position_offset := Vector2.ZERO
 @export var dialog_lines: Array[String] = [
 	"Ola, aventureiro!",
@@ -50,6 +51,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var current_dialog_lines := get_current_dialog_lines(has_pending_enemies)
 		if not has_pending_enemies:
 			has_interacted = true
+			if not next_scene_path.is_empty():
+				DialogManager.message_finished.connect(_on_dialog_finished, CONNECT_ONE_SHOT)
 		DialogManager.start_message(dialog_anchor.global_position + dialog_position_offset, current_dialog_lines)
 
 func get_current_dialog_lines(has_pending_enemies: bool) -> Array[String]:
@@ -74,3 +77,13 @@ func has_attackable_enemy_in_node(node: Node) -> bool:
 			return true
 
 	return false
+
+func _on_dialog_finished() -> void:
+	if next_scene_path.is_empty():
+		return
+
+	if not ResourceLoader.exists(next_scene_path):
+		push_warning("Next scene path does not exist: %s" % next_scene_path)
+		return
+
+	get_tree().call_deferred("change_scene_to_file", next_scene_path)
