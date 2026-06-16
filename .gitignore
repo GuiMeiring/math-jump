@@ -22,7 +22,7 @@
 
 # Local export settings
 export.cfg
-export_presets.cfg
+# export_presets.cfg is tracked because GitHub Actions needs the export presets.
 
 # Mono/.NET generated files
 /.mono/
