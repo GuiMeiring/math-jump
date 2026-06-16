@@ -25,6 +25,7 @@ window/size/viewport_width=400
 window/size/viewport_height=208
 window/size/mode=2
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [global_group]
 

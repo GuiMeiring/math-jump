@@ -1,0 +1,75 @@
+name: Build Godot Exports
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.6"
+  EXPORT_TEMPLATE_VERSION: "4.6.stable"
+  GODOT_BINARY: Godot_v4.6-stable_linux.x86_64
+  WINDOWS_PRESET: Windows Desktop
+  WEB_PRESET: Web
+
+jobs:
+  export:
+    name: Export Windows and Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Godot imports
+        uses: actions/cache@v4
+        with:
+          path: .godot/imported
+          key: godot-imports-${{ runner.os }}-${{ hashFiles('**/*.tscn', '**/*.tres', '**/*.gd', '**/*.png', '**/*.svg', '**/*.ttf', 'project.godot') }}
+          restore-keys: |
+            godot-imports-${{ runner.os }}-
+
+      - name: Download Godot
+        run: |
+          curl -L -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip -d godot
+          chmod +x "godot/${GODOT_BINARY}"
+          "godot/${GODOT_BINARY}" --version
+
+      - name: Install export templates
+        run: |
+          curl -L -o export_templates.tpz "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          mkdir -p "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_VERSION}"
+          unzip -q export_templates.tpz -d export_templates
+          cp -r export_templates/templates/* "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_VERSION}/"
+
+      - name: Import project assets
+        run: |
+          "godot/${GODOT_BINARY}" --headless --import --quit
+
+      - name: Export Windows
+        run: |
+          mkdir -p build/windows
+          "godot/${GODOT_BINARY}" --headless --export-release "${WINDOWS_PRESET}" "build/windows/math-jump.exe"
+
+      - name: Export Web
+        run: |
+          mkdir -p build/web/math-jump
+          "godot/${GODOT_BINARY}" --headless --export-release "${WEB_PRESET}" "build/web/math-jump/index.html"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-jump-windows
+          path: build/windows/
+          if-no-files-found: error
+
+      - name: Upload Web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-jump-web
+          path: build/web/math-jump/
+          if-no-files-found: error
