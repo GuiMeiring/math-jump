@@ -1,5 +1,15 @@
 # Math Jump
 
+[![Build Godot Exports](https://github.com/GuiMeiring/math-jump/actions/workflows/godot-build.yml/badge.svg)](https://github.com/GuiMeiring/math-jump/actions/workflows/godot-build.yml)
+
+## Jogar
+
+- Web: [abrir Math Jump no navegador](https://guimeiring.github.io/math-jump/)
+- Windows: [baixar a última build automática](https://github.com/GuiMeiring/math-jump/releases/tag/latest-build)
+- CI: [ver builds geradas pelo GitHub Actions](https://github.com/GuiMeiring/math-jump/actions/workflows/godot-build.yml)
+
+As builds são geradas automaticamente pelo CI. A versão web é publicada no GitHub Pages e a versão Windows fica disponível como arquivo `math-jump-windows.zip` na release `latest-build`.
+
 Math Jump é um jogo sério de matemática desenvolvido em Godot 4. O jogo combina plataforma vertical, combate e desafios matemáticos: Diego sobe por biomas de Numeralia, enfrenta inimigos e restaura o equilíbrio resolvendo cálculos.
 
 ## História
@@ -225,6 +235,11 @@ math-jump/
 ```
 
 ## Como Rodar
+
+### Builds Prontas
+
+- Web: acesse [guimeiring.github.io/math-jump](https://guimeiring.github.io/math-jump/).
+- Windows: baixe `math-jump-windows.zip` na [release `latest-build`](https://github.com/GuiMeiring/math-jump/releases/tag/latest-build), extraia o arquivo e execute `math-jump.exe`.
 
 ### Requisitos
 

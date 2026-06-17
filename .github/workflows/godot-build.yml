@@ -8,6 +8,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 env:
   GODOT_VERSION: "4.6"
   EXPORT_TEMPLATE_VERSION: "4.6.stable"
@@ -59,12 +64,18 @@ jobs:
         run: |
           mkdir -p build/web/math-jump
           "godot/${GODOT_BINARY}" --headless --export-release "${WEB_PRESET}" "build/web/math-jump/index.html"
+          touch build/web/math-jump/.nojekyll
+
+      - name: Package Windows build
+        run: |
+          cd build/windows
+          zip -r ../math-jump-windows.zip .
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: math-jump-windows
-          path: build/windows/
+          path: build/math-jump-windows.zip
           if-no-files-found: error
 
       - name: Upload Web artifact
@@ -73,3 +84,63 @@ jobs:
           name: math-jump-web
           path: build/web/math-jump/
           if-no-files-found: error
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web/math-jump
+
+  publish-windows:
+    name: Publish Windows Release
+    needs: export
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: math-jump-windows
+          path: build
+
+      - name: Publish Windows release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_NOTES="Build Windows gerada automaticamente a partir do commit ${GITHUB_SHA}."
+          git tag -f latest-build "${GITHUB_SHA}"
+          git push origin refs/tags/latest-build --force
+
+          if gh release view latest-build >/dev/null 2>&1; then
+            gh release upload latest-build build/math-jump-windows.zip --clobber
+            gh release edit latest-build \
+              --title "Ultima build automatica" \
+              --notes "${RELEASE_NOTES}"
+          else
+            gh release create latest-build build/math-jump-windows.zip \
+              --title "Ultima build automatica" \
+              --notes "${RELEASE_NOTES}"
+          fi
+
+  deploy-web:
+    name: Deploy Web to GitHub Pages
+    needs: export
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
