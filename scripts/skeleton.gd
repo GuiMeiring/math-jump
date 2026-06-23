@@ -121,8 +121,7 @@ func hurt_state(_delta):
 	pass
 	
 func take_damage():
-	if balloon:
-		balloon.queue_free()
+	remove_balloon()
 	
 	go_to_hurt_state()
 
@@ -183,7 +182,10 @@ func get_math_state_key() -> String:
 func load_math_state():
 	var saved_state = DialogManager.get_math_state(math_state_key)
 	if saved_state.is_empty():
+		var previous_question := DialogManager.get_previous_math_question(math_state_key)
 		generate_math()
+		while not previous_question.is_empty() and current_question == previous_question:
+			generate_math()
 		DialogManager.save_math_state(math_state_key, {
 			"question": current_question,
 			"answer": correct_answer,
@@ -197,3 +199,10 @@ func load_math_state():
 
 func spawn_balloon():
 	balloon = DialogManager.show_balloon(self, current_question, math_state_key)
+
+func remove_balloon() -> void:
+	if not math_state_key.is_empty():
+		DialogManager.remove_balloon(math_state_key)
+	elif is_instance_valid(balloon):
+		balloon.queue_free()
+	balloon = null

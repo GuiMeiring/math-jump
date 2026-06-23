@@ -1,8 +1,10 @@
 extends CanvasLayer
 
 const MAIN_MENU_PATH := "res://scene/main_menu.tscn"
-const BUTTON_BASE_COLOR := Color(0.28, 0.62, 0.93)
-const BUTTON_HOVER_COLOR := Color(0.58, 0.86, 1.0)
+const CANCEL_BASE_COLOR := Color(0.28, 0.62, 0.93)
+const CANCEL_HOVER_COLOR := Color(0.58, 0.86, 1.0)
+const CONFIRM_BASE_COLOR := Color(0.82, 0.25, 0.25)
+const CONFIRM_HOVER_COLOR := Color(1.0, 0.45, 0.4)
 const BUTTON_BORDER_COLOR := Color(0.12, 0.2, 0.16)
 
 @onready var menu_button: Button = $ScreenAnchor/MenuButton
@@ -69,8 +71,10 @@ func _on_confirmation_button_mouse_exited(button: Button) -> void:
 	_refresh_confirmation_button(button)
 
 func _refresh_confirmation_button(button: Button) -> void:
+	var base_color := CONFIRM_BASE_COLOR if button == confirm_button else CANCEL_BASE_COLOR
+	var hover_color := CONFIRM_HOVER_COLOR if button == confirm_button else CANCEL_HOVER_COLOR
 	var focus_style := StyleBoxFlat.new()
-	focus_style.bg_color = BUTTON_HOVER_COLOR if hovered_confirmation_button == button else BUTTON_BASE_COLOR
+	focus_style.bg_color = hover_color if hovered_confirmation_button == button else base_color
 	focus_style.border_width_left = 2
 	focus_style.border_width_top = 2
 	focus_style.border_width_right = 2
