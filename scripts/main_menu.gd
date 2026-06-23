@@ -143,6 +143,10 @@ func _build_static_preview() -> void:
 	DialogManager.balloons_enabled = true
 
 func _configure_preview_scene(preview_scene: Node) -> void:
+	var preview_music := preview_scene.get_node_or_null("BackgroundMusic") as AudioStreamPlayer
+	if preview_music != null:
+		preview_music.autoplay = false
+
 	var preview_player := preview_scene.get_node_or_null("Player")
 	if preview_player == null:
 		return

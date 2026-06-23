@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cgn2gxedt0deu"]
 
 [ext_resource type="Script" uid="uid://hlyjih1821vf" path="res://scripts/main_menu.gd" id="1_main_menu"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/tropical.ogg" id="2_tropical_music"]
 
 [node name="MainMenu" type="Control" unique_id=932312715]
 layout_mode = 3
@@ -10,6 +11,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_menu")
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_tropical_music")
+autoplay = true
 
 [node name="PreviewContainer" type="SubViewportContainer" parent="." unique_id=439378627]
 layout_mode = 1
@@ -101,3 +106,5 @@ layout_mode = 2
 
 [node name="BackButton" type="Button" parent="UiLayer/MainUi/MapButtonsCenter/MapButtons" unique_id=1381940657]
 layout_mode = 2
+
+[connection signal="finished" from="BackgroundMusic" to="BackgroundMusic" method="play"]
