@@ -84,9 +84,9 @@ func _refresh_confirmation_button(button: Button) -> void:
 	focus_style.corner_radius_top_right = 10
 	focus_style.corner_radius_bottom_right = 10
 	focus_style.corner_radius_bottom_left = 10
-	focus_style.content_margin_left = 6
+	focus_style.content_margin_left = 8
 	focus_style.content_margin_top = 3
-	focus_style.content_margin_right = 6
+	focus_style.content_margin_right = 8
 	focus_style.content_margin_bottom = 3
 	focus_style.shadow_color = Color(0.06, 0.11, 0.09, 0.35)
 	focus_style.shadow_size = 5

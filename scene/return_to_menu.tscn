@@ -15,12 +15,81 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.58, 0.86, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.2, 0.16, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_focus"]
+bg_color = Color(0.28, 0.62, 0.93, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.2, 0.16, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+shadow_color = Color(0.06, 0.11, 0.09, 0.35)
+shadow_size = 5
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_no_focus"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.28, 0.62, 0.93, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.2, 0.16, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_button_normal"]
+bg_color = Color(0.28, 0.62, 0.93, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.2, 0.16, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 content_margin_left = 6.0
 content_margin_top = 3.0
 content_margin_right = 6.0
 content_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_button_hover"]
 bg_color = Color(0.58, 0.86, 1, 1)
 border_width_left = 2
 border_width_top = 2
@@ -36,28 +105,7 @@ content_margin_top = 3.0
 content_margin_right = 6.0
 content_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_focus"]
-bg_color = Color(0.28, 0.62, 0.93, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.12, 0.2, 0.16, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 6.0
-content_margin_top = 3.0
-content_margin_right = 6.0
-content_margin_bottom = 3.0
-shadow_color = Color(0.06, 0.11, 0.09, 0.35)
-shadow_size = 5
-shadow_offset = Vector2(0, 3)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_no_focus"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_button_pressed"]
 bg_color = Color(0.28, 0.62, 0.93, 1)
 border_width_left = 2
 border_width_top = 2
@@ -84,9 +132,9 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-content_margin_left = 6.0
+content_margin_left = 8.0
 content_margin_top = 3.0
-content_margin_right = 6.0
+content_margin_right = 8.0
 content_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_hover"]
@@ -100,9 +148,9 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-content_margin_left = 6.0
+content_margin_left = 8.0
 content_margin_top = 3.0
-content_margin_right = 6.0
+content_margin_right = 8.0
 content_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_pressed"]
@@ -116,9 +164,9 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-content_margin_left = 6.0
+content_margin_left = 8.0
 content_margin_top = 3.0
-content_margin_right = 6.0
+content_margin_right = 8.0
 content_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_focus"]
@@ -132,9 +180,9 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-content_margin_left = 6.0
+content_margin_left = 8.0
 content_margin_top = 3.0
-content_margin_right = 6.0
+content_margin_right = 8.0
 content_margin_bottom = 3.0
 shadow_color = Color(0.06, 0.11, 0.09, 0.35)
 shadow_size = 5
@@ -172,9 +220,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_button_pressed")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_no_focus")
 text = "Menu"
 
@@ -232,7 +280,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="WarningLabel" type="Label" parent="ScreenAnchor/Confirmation/CenterContainer/DialogContainer/ContentMargin/Content"]
-custom_minimum_size = Vector2(250, 42)
+custom_minimum_size = Vector2(250, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.196078, 0.145098, 0.121569, 1)
 theme_override_fonts/font = ExtResource("3_font")
@@ -248,14 +296,14 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="CancelButton" type="Button" parent="ScreenAnchor/Confirmation/CenterContainer/DialogContainer/ContentMargin/Content/Buttons"]
-custom_minimum_size = Vector2(94, 22)
+custom_minimum_size = Vector2(128, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 7
+theme_override_font_sizes/font_size = 9
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
@@ -263,14 +311,14 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
 text = "Cancelar"
 
 [node name="ConfirmButton" type="Button" parent="ScreenAnchor/Confirmation/CenterContainer/DialogContainer/ContentMargin/Content/Buttons"]
-custom_minimum_size = Vector2(120, 22)
+custom_minimum_size = Vector2(128, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 7
+theme_override_font_sizes/font_size = 9
 theme_override_styles/normal = SubResource("StyleBoxFlat_confirm_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_confirm_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_confirm_pressed")

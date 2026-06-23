@@ -126,25 +126,25 @@ allow_negative_numbers = true
 [node name="Skeleton7" parent="." unique_id=28655050 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(368, -1240)
-operation_type = "equation"
+operation_type = "mult"
 allow_negative_numbers = true
 
 [node name="Skeleton8" parent="." unique_id=2058676853 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(160, -1432)
-operation_type = "equation"
+operation_type = "pow"
 allow_negative_numbers = true
 
 [node name="Skeleton9" parent="." unique_id=809751980 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(432, -1640)
-operation_type = "equation"
+operation_type = "mult"
 allow_negative_numbers = true
 
 [node name="Skeleton10" parent="." unique_id=559835108 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(224, -1832)
-operation_type = "equation"
+operation_type = "pow"
 allow_negative_numbers = true
 
 [node name="Limit" type="StaticBody2D" parent="." unique_id=2014983788]
