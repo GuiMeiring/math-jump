@@ -57,12 +57,14 @@ func _on_letter_time_display_timeout() -> void:
 	display_letter()
 	
 func _process(_delta):
-	if target and not is_instance_valid(target):
+	if target == null:
+		return
+
+	if not is_instance_valid(target):
 		queue_free()
 		target = null
 		return
 	
-	if target:
-		global_position = target.global_position + Vector2(-12, -30)
+	global_position = target.global_position + Vector2(-12, -30)
 		
 	

@@ -553,6 +553,9 @@ func die() -> void:
 	reload_timer.start(death_reload_delay)
 
 func _on_reload_timer_timeout() -> void:
+	var current_scene := get_tree().current_scene
+	if current_scene != null:
+		DialogManager.reset_math_state_for_scene(current_scene.scene_file_path)
 	get_tree().reload_current_scene()
 
 func try_attack():
