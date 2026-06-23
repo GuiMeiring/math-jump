@@ -26,7 +26,7 @@ Ao restaurar os biomas, Diego prova que evoluiu na matemática e devolve o equil
 
 ### Vale Tropical
 
-A fase apresenta os principais sistemas do jogo e foca em desafios de multiplicação e divisão, com dificuldade mais acessível.
+A fase apresenta os principais sistemas do jogo e trabalha multiplicação, divisão, raiz quadrada e potência.
 
 Personagem guia: Holly.
 
@@ -34,7 +34,7 @@ Cena: `scene/tropic.tscn`
 
 ### Picos de Gelo
 
-A fase aumenta a dificuldade com desafios de raiz, potência e fatorial, exigindo mais atenção do jogador antes de responder.
+A fase aumenta a dificuldade com multiplicação, raiz quadrada, potência e equações de primeiro grau. Multiplicações, potências e equações podem usar números negativos.
 
 Personagem guia: Penguin.
 
@@ -83,7 +83,7 @@ Fluxo geral:
 
 ## Sistema De Matemática
 
-Cada inimigo possui um `operation_type`, que define o tipo de cálculo gerado pelo `MathSystem`.
+Cada inimigo possui um `operation_type`, que define o tipo de cálculo gerado pelo `MathSystem`. A propriedade `allow_negative_numbers` permite números negativos apenas nos desafios configurados da fase Picos de Gelo.
 
 Operações disponíveis:
 
@@ -91,7 +91,7 @@ Operações disponíveis:
 - `div`: divisão
 - `sqrt`: raiz quadrada
 - `pow`: potência
-- `fact`: fatorial
+- `equation`: equação de primeiro grau
 
 Fluxo do ataque matemático:
 

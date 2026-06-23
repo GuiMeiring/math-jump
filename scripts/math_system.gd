@@ -31,7 +31,10 @@ func generate(type, allow_negative_numbers := false):
 			answer = result
 
 		"sqrt":
-			var list = [49, 64, 81, 100, 121, 144, 169, 196, 225]
+			var list = [
+				49, 64, 81, 100, 121, 144, 169, 196, 225,
+				256, 289, 324, 361, 400
+			]
 			var n = list.pick_random()
 			question = "√%d" % n
 			answer = int(sqrt(n))
