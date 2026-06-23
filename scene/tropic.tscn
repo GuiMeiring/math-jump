@@ -15,6 +15,7 @@
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="15_bqokr"]
 [ext_resource type="PackedScene" uid="uid://c17vbc6hoya1h" path="res://entities/holly.tscn" id="16_holly"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/tropical.ogg" id="17_tropical_music"]
+[ext_resource type="PackedScene" path="res://scene/return_to_menu.tscn" id="18_return_to_menu"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t8vtq"]
 animations = [{
@@ -198,6 +199,8 @@ position = Vector2(580, 0)
 shape = SubResource("RectangleShape2D_d18o5")
 
 [node name="ControlGuide" parent="." unique_id=295952099 instance=ExtResource("13_y1rfm")]
+
+[node name="ReturnToMenu" parent="." instance=ExtResource("18_return_to_menu")]
 
 [node name="DiegoHouseBalloon" type="Node2D" parent="." unique_id=599035816]
 z_index = -1

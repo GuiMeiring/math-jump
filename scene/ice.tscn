@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://de2rmw7v5tw18" path="res://scene/control_guide.tscn" id="11_77kb5"]
 [ext_resource type="PackedScene" uid="uid://bpp38b8f62vd8" path="res://entities/penguin.tscn" id="12_477f2"]
 [ext_resource type="AudioStream" path="res://assets/audio/music/ice.ogg" id="13_ice_music"]
+[ext_resource type="PackedScene" path="res://scene/return_to_menu.tscn" id="14_return_to_menu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_side_limit"]
 size = Vector2(21, 2300)
@@ -161,6 +162,8 @@ position = Vector2(580, 0)
 shape = SubResource("RectangleShape2D_side_limit")
 
 [node name="ControlGuide" parent="." unique_id=1071225711 instance=ExtResource("11_77kb5")]
+
+[node name="ReturnToMenu" parent="." instance=ExtResource("14_return_to_menu")]
 
 [node name="Penguin" parent="." unique_id=337455175 instance=ExtResource("12_477f2")]
 position = Vector2(253, 134)

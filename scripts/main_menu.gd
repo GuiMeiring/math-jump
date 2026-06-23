@@ -154,7 +154,7 @@ func _configure_preview_scene(preview_scene: Node) -> void:
 	preview_player.set("menu_preview_mode", true)
 
 func _hide_preview_gameplay_ui(preview_scene: Node) -> void:
-	for node_path in ["ControlGuide", "Player/HealthLayer", "Player/AttackFeedbackLayer"]:
+	for node_path in ["ControlGuide", "ReturnToMenu", "Player/HealthLayer", "Player/AttackFeedbackLayer"]:
 		var ui_node := preview_scene.get_node_or_null(node_path)
 		if ui_node == null:
 			continue
