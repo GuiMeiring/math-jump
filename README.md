@@ -34,7 +34,7 @@ Cena: `scene/tropic.tscn`
 
 ### Picos de Gelo
 
-A fase aumenta a dificuldade com multiplicação, raiz quadrada, potência e equações de primeiro grau. Multiplicações, potências e equações podem usar números negativos.
+A fase aumenta a dificuldade com multiplicação, raiz quadrada e potência. Multiplicações e potências podem usar números negativos.
 
 Personagem guia: Penguin.
 
@@ -91,7 +91,6 @@ Operações disponíveis:
 - `div`: divisão
 - `sqrt`: raiz quadrada
 - `pow`: potência
-- `equation`: equação de primeiro grau
 
 Fluxo do ataque matemático:
 

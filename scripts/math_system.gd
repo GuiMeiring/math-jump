@@ -48,27 +48,6 @@ func generate(type, allow_negative_numbers := false):
 			question = "%s^%d" % [format_number(a), b]
 			answer = int(pow(a, b))
 
-		"equation":
-			var coefficient = randi_range(2, 12)
-			var solution = randi_range(2, 12)
-			var constant = randi_range(2, 20)
-
-			if allow_negative_numbers:
-				if randi_range(0, 1) == 0:
-					coefficient *= -1
-				if randi_range(0, 1) == 0:
-					solution *= -1
-				if randi_range(0, 1) == 0:
-					constant *= -1
-
-			var result = coefficient * solution + constant
-			question = "%dx %s = %d" % [
-				coefficient,
-				format_signed_term(constant),
-				result
-			]
-			answer = solution
-
 	return {
 		"question": question,
 		"answer": answer,
@@ -102,8 +81,3 @@ func format_number(value: int) -> String:
 	if value < 0:
 		return "(%d)" % value
 	return str(value)
-
-func format_signed_term(value: int) -> String:
-	if value < 0:
-		return "- %d" % abs(value)
-	return "+ %d" % value
