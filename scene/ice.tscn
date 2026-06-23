@@ -89,7 +89,8 @@ region_rect = Rect2(0, 0, 576, 208)
 [node name="Skeleton" parent="." unique_id=1781090486 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(307, -23)
-operation_type = "div"
+operation_type = "mult"
+allow_negative_numbers = true
 
 [node name="Skeleton2" parent="." unique_id=758757611 instance=ExtResource("9_i0mrl")]
 z_index = 2
@@ -105,36 +106,43 @@ operation_type = "sqrt"
 z_index = 2
 position = Vector2(160, -648)
 operation_type = "pow"
+allow_negative_numbers = true
 
 [node name="Skeleton5" parent="." unique_id=200486575 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(432, -840)
 operation_type = "pow"
+allow_negative_numbers = true
 
 [node name="Skeleton6" parent="." unique_id=637002075 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(128, -1048)
 operation_type = "pow"
+allow_negative_numbers = true
 
 [node name="Skeleton7" parent="." unique_id=28655050 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(368, -1240)
-operation_type = "fact"
+operation_type = "equation"
+allow_negative_numbers = true
 
 [node name="Skeleton8" parent="." unique_id=2058676853 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(160, -1432)
-operation_type = "fact"
+operation_type = "equation"
+allow_negative_numbers = true
 
 [node name="Skeleton9" parent="." unique_id=809751980 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(432, -1640)
-operation_type = "fact"
+operation_type = "equation"
+allow_negative_numbers = true
 
 [node name="Skeleton10" parent="." unique_id=559835108 instance=ExtResource("9_i0mrl")]
 z_index = 2
 position = Vector2(224, -1832)
-operation_type = "fact"
+operation_type = "equation"
+allow_negative_numbers = true
 
 [node name="Limit" type="StaticBody2D" parent="." unique_id=2014983788]
 position = Vector2(0, -850)
@@ -165,7 +173,7 @@ can_interact_multiple_times = false
 require_all_enemies_defeated = true
 remaining_enemies_dialog_lines = Array[String](["Ohh não, Diego!", "Ainda existem inimigos nos Picos de Gelo.", "O equilíbrio final ainda não foi restaurado.", "Derrote todos os inimigos e volte aqui."])
 next_scene_path = "res://scene/main_menu.tscn"
-dialog_lines = Array[String](["Diego, você conseguiu!", "Os Picos de Gelo voltaram ao equilibrio.", "Numeralia esta em paz novamente.", "Obrigado por corrigir os cálculos até o fim!"])
+dialog_lines = Array[String](["Diego, você conseguiu!", "Os Picos de Gelo voltaram ao equilíbrio.", "Numeralia está em paz novamente.", "Obrigado por corrigir os cálculos até o fim!"])
 
 [editable path="Camera"]
 

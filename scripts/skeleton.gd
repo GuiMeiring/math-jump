@@ -37,6 +37,7 @@ var options
 var balloon
 var math_state_key := ""
 @export var operation_type: String = "mult"
+@export var allow_negative_numbers := false
 
 func _ready() -> void:
 	math_state_key = get_math_state_key()
@@ -165,7 +166,7 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		return
 
 func generate_math():
-	var data = math_system.generate(operation_type)
+	var data = math_system.generate(operation_type, allow_negative_numbers)
 	
 	current_question = data["question"]
 	correct_answer = data["answer"]

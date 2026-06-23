@@ -118,11 +118,11 @@ jobs:
           if gh release view latest-build >/dev/null 2>&1; then
             gh release upload latest-build build/math-jump-windows.zip --clobber
             gh release edit latest-build \
-              --title "Ultima build automatica" \
+              --title "Math Jump - Build" \
               --notes "${RELEASE_NOTES}"
           else
             gh release create latest-build build/math-jump-windows.zip \
-              --title "Ultima build automatica" \
+              --title "Math Jump - Build" \
               --notes "${RELEASE_NOTES}"
           fi
 
