@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b57mrbwvcljh1" path="res://sprites/mini_UI/Dialog_Box(16 x 16) (1).png" id="14_15l3d"]
 [ext_resource type="FontFile" uid="uid://xk22yd7ir4qo" path="res://sprites/fonts/RevMiniPixel.ttf" id="15_bqokr"]
 [ext_resource type="PackedScene" uid="uid://c17vbc6hoya1h" path="res://entities/holly.tscn" id="16_holly"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/tropical.ogg" id="17_tropical_music"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t8vtq"]
 animations = [{
@@ -34,6 +35,10 @@ size = Vector2(21, 2300)
 
 [node name="Tropic" type="Node2D" unique_id=593944009]
 metadata/_edit_horizontal_guides_ = [-164.0]
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17_tropical_music")
+autoplay = true
 
 [node name="Tile" type="Node" parent="." unique_id=286968174]
 
@@ -58,7 +63,7 @@ dialog_lines = Array[String](["Diego, ainda bem que você chegou!", "O Vale Trop
 position = Vector2(268, -1827)
 can_interact_multiple_times = false
 require_all_enemies_defeated = true
-remaining_enemies_dialog_lines = Array[String](["Ohh nao, Diego!", "Ainda existem inimigos no Vale Tropical.", "O equilibrio ainda nao foi restaurado.", "Derrote todos os inimigos e volte aqui."])
+remaining_enemies_dialog_lines = Array[String](["Ohh não, Diego!", "Ainda existem inimigos no Vale Tropical.", "O equilíbrio ainda não foi restaurado.", "Derrote todos os inimigos e volte aqui."])
 next_scene_path = "res://scene/ice.tscn"
 dialog_lines = Array[String](["Diego, você conseguiu!", "O Vale Tropical voltou ao equilíbrio.", "Obrigada por corrigir os cálculos daqui.", "Mas Numeralia ainda precisa de você!", "Os Picos de Gelo também está em perigo!"])
 
@@ -251,3 +256,5 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [editable path="Camera"]
+
+[connection signal="finished" from="BackgroundMusic" to="BackgroundMusic" method="play"]
