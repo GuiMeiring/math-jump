@@ -36,7 +36,7 @@ func generate(type, allow_negative_numbers := false):
 				256, 289, 324, 361, 400
 			]
 			var n = list.pick_random()
-			question = "√%d" % n
+			question = "raiz(%d)" % n
 			answer = int(sqrt(n))
 
 		"pow":
