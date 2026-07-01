@@ -2,6 +2,17 @@
 
 [![Build Godot Exports](https://github.com/GuiMeiring/math-jump/actions/workflows/godot-build.yml/badge.svg)](https://github.com/GuiMeiring/math-jump/actions/workflows/godot-build.yml)
 
+## Sobre o Projeto
+
+Math Jump é um projeto acadêmico desenvolvido como PAC Extensionista no curso de **Engenharia de Software** do **Centro Universitário Católica de Santa Catarina**, sob supervisão da professora **Jessica Aline Karsten**.
+
+**Integrantes:**
+- Johnatan Vargas da Fonseca
+- Iago Henrique Pinto Bogler
+- Guilherme Franciel Meiring
+- Marceu Lago Pontes Schmidt
+- Cleberson Luis Vieira Martins Maia
+
 ## Jogar
 
 - Web: [abrir Math Jump no navegador](https://guimeiring.github.io/math-jump/)
